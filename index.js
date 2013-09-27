@@ -15,3 +15,7 @@ socket.on('test_event', function(data) {
 	tracer.debug(data);
 });
 
+socket.on('disconnect', function(data) {
+	tracer.info('Disconnected: Thanks for playing.');
+	process.exit();
+})
