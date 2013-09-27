@@ -4,7 +4,7 @@ var tracer = require('tracer').colorConsole({
 });
 
 var socket = io.connect('http://localhost:1337', {
-	'player': 'player1'
+	query: 'username=player1'
 });
 
 socket.on('handshake', function(data) {
