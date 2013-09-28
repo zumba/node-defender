@@ -1,6 +1,7 @@
 var io = require('socket.io-client');
 var tracer = require('tracer').colorConsole({
-	level: 'debug'
+	level: 'debug',
+    format : "{{message}}",
 });
 
 var defender = io.connect('http://localhost:1337/defender', {
