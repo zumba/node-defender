@@ -10,10 +10,19 @@ var defender = io.connect('http://localhost:1337/defender', {
 
 defender
 	.on('handshake', function(data) {
-		tracer.info(data);
+		tracer.info('%s', data.message);
 	})
-	.on('test_event', function(data) {
+	.on('round', function(data) {
+		tracer.info('Round %s', data.round);
 		tracer.debug(data);
+		defender.emit('action', {
+			'target': 'somemobid',
+			'weapon': 'someweapontouse'
+		});
+	})
+	.on('death', function(data) {
+		tracer.error('%s', data.message);
+		tracer.warn(data.stats);
 	})
 	.on('disconnect', function(data) {
 		tracer.info('Disconnected: Thanks for playing.');
