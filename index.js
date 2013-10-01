@@ -1,3 +1,4 @@
+/* globals process */
 var io = require('socket.io-client');
 var _ = require('underscore');
 var tracer = require('tracer').colorConsole({
@@ -11,7 +12,7 @@ var defender = io.connect('http://localhost:1337/defender', {
 
 function alpha(data) {
 	// Attack the first mob
-	enemy = _.first(data.mobs);
+	var enemy = _.first(data.mobs);
 	return enemy.id;
 }
 
@@ -36,7 +37,7 @@ defender
 		tracer.error('%s', data.message);
 		tracer.warn(data.stats);
 	})
-	.on('disconnect', function(data) {
+	.on('disconnect', function() {
 		tracer.info('Disconnected: Thanks for playing.');
 		process.exit();
 	});
