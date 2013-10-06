@@ -1,4 +1,6 @@
 /* globals process */
+
+// Modules
 var io = require('socket.io-client');
 var _ = require('underscore');
 var tracer = require('tracer').colorConsole({
@@ -6,32 +8,27 @@ var tracer = require('tracer').colorConsole({
     format : "{{message}}",
 });
 
-var defender = io.connect('http://localhost:1337/defender', {
-	query: 'username=player1'
-});
+// Lib
+var RoundInfo = require('./lib/round_info');
+var Brain = require('./lib/brain');
+var Commander = require('./lib/commander');
 
-function alpha(data) {
-	// Attack the first mob
-	var enemy = _.first(data.mobs);
-	return enemy.id;
-}
+// locals
+var defender = io.connect((process.env.HOST || 'http://localhost:1337') + '/defender', {
+	query: 'username=' + Brain.username
+});
+var brain = new Brain(new Commander(defender, tracer));
 
 defender
 	.on('handshake', function(data) {
 		tracer.info('%s', data.message);
 	})
 	.on('round', function(data) {
-		var target;
 		tracer.info('Round %s', data.round);
+		// @todo remove debug output
 		tracer.debug(data);
 
-		target = alpha(data);
-		tracer.debug('Target: ' + target);
-
-		defender.emit('action', {
-			'target': target,
-			'weapon': 'default'
-		});
+		brain.onRound(new RoundInfo(data));
 	})
 	.on('death', function(data) {
 		tracer.error('%s', data.message);
