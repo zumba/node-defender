@@ -18,4 +18,4 @@ To begin, edit `strategy.js` in the root folder and devise your strategy to last
 
 ```HOST=<server host> npm start```
 
-By default, `HOST` is `localhost:1337`.
+By default, `HOST` is `localhost:8080`.

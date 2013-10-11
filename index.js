@@ -14,7 +14,7 @@ var Brain = require('./lib/brain');
 var Commander = require('./lib/commander');
 
 // locals
-var defender = io.connect((process.env.HOST || 'http://localhost:1337') + '/defender', {
+var defender = io.connect((process.env.HOST || 'http://localhost:8080') + '/defender', {
 	query: 'username=' + require('./strategy').name
 });
 var brain = new Brain(new Commander(defender, tracer));
