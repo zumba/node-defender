@@ -38,9 +38,6 @@ module.exports = {
 
 		// Select the attack mode
 		commander.attackMode('default');
-
-		// Execute your command
-		commander.sendToServer();
 	}
 
 };
