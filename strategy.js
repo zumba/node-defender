@@ -28,7 +28,7 @@ module.exports = {
 	 * @return void
 	 */
 	onRound: function(roundInfo, commander) {
-		var enemy;
+		var enemy, attackModes;
 
 		// Find the first enemy and target it.
 		enemy = _.first(roundInfo.getMobs());
@@ -37,7 +37,7 @@ module.exports = {
 		commander.target(enemy.id);
 
 		// Select the attack mode
-		commander.attackMode('default');
+		commander.attackMode('power');
 	}
 
 };
