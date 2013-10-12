@@ -22,15 +22,16 @@ defender
 		Blabber.info(data.message);
 	})
 	.on('round', function(data) {
-		Blabber.info('Round %s', data.round);
+		Blabber.info('\nRound %s\n', data.round);
 		blab = new Blabber(data);
-		// @todo remove debug output
-		blab.debugOutput();
+		blab.displayPlayerHealth();
+		blab.displayPlayerActions();
+		blab.displayEnemyActions();
 
 		brain.onRound(new RoundInfo(data));
 	})
 	.on('death', function(data) {
-		Blabber.error(data.message);
+		Blabber.error('\n%s', data.message);
 		Blabber.warn(data.stats);
 	})
 	.on('disconnect', function() {
