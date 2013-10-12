@@ -37,4 +37,8 @@ defender
 	.on('disconnect', function() {
 		Blabber.info('Disconnected: Thanks for playing.');
 		process.exit();
+	})
+	.on('connect_failed', function(reason) {
+		Blabber.error(reason);
+		process.exit();
 	});
