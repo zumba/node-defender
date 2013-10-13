@@ -23,13 +23,15 @@ defender
 		Blabber.info(data.message);
 	})
 	.on('round', function(data) {
+		var roundInfo = new RoundInfo(data);
 		Blabber.info('\nRound %s\n', data.round);
-		blab = new Blabber(data);
+
+		blab = new Blabber(roundInfo);
 		blab.displayPlayerHealth();
 		blab.displayPlayerActions();
 		blab.displayEnemyActions();
 
-		brain.onRound(new RoundInfo(data));
+		brain.onRound(roundInfo);
 	})
 	.on('death', function(data) {
 		Blabber.error('\n%s', data.message);
