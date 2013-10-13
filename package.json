@@ -23,8 +23,12 @@
 		"underscore": "1.5.x",
 		"tracer": "0.5.x"
 	},
+	"devDependencies": {
+    	"grunt": "~0.4.1",
+    	"grunt-contrib-jshint": "~0.6.4"
+    },
 	"engine": {
-		"node": ">=0.10.4"
+		"node": "0.10.x"
 	},
 	"license": "MIT"
 }
