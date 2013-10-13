@@ -9,10 +9,11 @@ var RoundInfo = require('./lib/round_info');
 var Brain = require('./lib/brain');
 var Commander = require('./lib/commander');
 var Blabber = require('./lib/blabber');
+var Security = require('./lib/security');
 
 // locals
 var defender = io.connect((process.env.HOST || 'http://localhost:8080') + '/defender', {
-	query: 'username=' + require('./strategy').name
+	query: 'username=' + require('./strategy').name + '&clientHash=' + Security.generateFileHash()
 });
 var brain = new Brain(new Commander(defender));
 var blab;
