@@ -15,7 +15,8 @@ var Security = require('./lib/security');
 var defender = io.connect((process.env.HOST || 'http://localhost:8080') + '/defender', {
 	query: 'username=' + require('./strategy').name + '&clientHash=' + Security.generateFileHash()
 });
-var brain = new Brain(new Commander(defender));
+var commander = new Commander(defender);
+var brain = new Brain(commander);
 var blab;
 
 defender
@@ -24,12 +25,15 @@ defender
 	})
 	.on('round', function(data) {
 		var roundInfo = new RoundInfo(data);
-		Blabber.info('\nRound %s\n', data.round);
+		Blabber.info('\nRound %s', data.round);
 
 		blab = new Blabber(roundInfo);
 		blab.displayPlayerHealth();
-		blab.displayPlayerActions();
-		blab.displayEnemyActions();
+		if (data.round !== 1){
+			Blabber.debug('\nTargeting %s with %s attack mode.', commander.enemyTarget, commander.mode);
+			blab.displayPlayerActions();
+			blab.displayEnemyActions();
+		}
 
 		brain.onRound(roundInfo);
 	})
