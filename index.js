@@ -29,6 +29,9 @@ defender
 
 		blab = new Blabber(roundInfo);
 		blab.displayPlayerHealth();
+		if (data.insult){
+			Blabber.error(data.insult);
+		}
 		if (data.round !== 1){
 			Blabber.debug('\nTargeting %s with %s attack mode.', commander.enemyTarget, commander.mode);
 			blab.displayPlayerActions();
