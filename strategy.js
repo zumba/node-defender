@@ -28,7 +28,7 @@ module.exports = {
 	 * @return void
 	 */
 	onRound: function(roundInfo, commander) {
-		var enemy, attackModes;
+		var enemy;
 
 		// Find the first enemy and target it.
 		enemy = _.first(roundInfo.getMobs());
