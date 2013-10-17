@@ -24,7 +24,7 @@ To defend your node, you will need to implement a strategy against the waves of 
 
 To begin, edit `strategy.js` in the root folder and devise your strategy to last as long as possible against the onslaught.
 
-1. Edit your name (Default is `player1`)
+1. Edit your name (Default is `player1`). Only alphanumeric, dashes, underscores, parentheses and spaces are allowed.
 2. Implement the `onRound` method. This will be called once per round from the server and provide you with information and a commander.
 	* The `roundInfo` object contains methods for getting information about the round, such as a list of mobs.
 	* The `commander` is where you will define what enemy to attack and what attack mode you want to use.
