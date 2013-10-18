@@ -1,8 +1,6 @@
-var _ = require('underscore');
-var Blabber = require('./blabber');
-module.exports = (function() {
+var Commander = (function() {
 
-	var _defender, _tracer;
+	var _defender;
 	var _defaultAttackMode = 'power';
 	var _validAttackModes = [
 		'power',

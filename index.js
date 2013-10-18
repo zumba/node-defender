@@ -1,54 +1,23 @@
 /* globals process */
 
 // Modules
-var io = require('socket.io-client');
 var _ = require('underscore');
+var express = require('express');
+var app = express();
+var server = require('http').createServer(app);
 
-// Lib
-var RoundInfo = require('./lib/round_info');
-var Brain = require('./lib/brain');
-var Commander = require('./lib/commander');
-var Blabber = require('./lib/blabber');
-var Security = require('./lib/security');
+// Setup Express Server
+app.use(express.static(__dirname + '/public'));
+app.engine('jade', require('jade').__express);
+app.set('views', __dirname + '/templates');
+app.set('view engine', 'jade');
 
-// locals
-var defender = io.connect((process.env.HOST || 'http://localhost:8080') + '/defender', {
-	query: 'username=' + require('./strategy').name + '&clientHash=' + Security.generateFileHash()
-});
-var commander = new Commander(defender);
-var brain = new Brain(commander);
-var blab;
-
-defender
-	.on('handshake', function(data) {
-		Blabber.info(data.message);
-	})
-	.on('round', function(data) {
-		var roundInfo = new RoundInfo(data);
-		Blabber.info('\nRound %s', data.round);
-
-		blab = new Blabber(roundInfo);
-		blab.displayPlayerHealth();
-		if (data.insult){
-			Blabber.error(data.insult);
-		}
-		if (data.round !== 1){
-			Blabber.debug('\nTargeting %s with %s attack mode.', commander.enemyTarget, commander.mode);
-			blab.displayPlayerActions();
-			blab.displayEnemyActions();
-		}
-
-		brain.onRound(roundInfo);
-	})
-	.on('death', function(data) {
-		Blabber.error('\n%s', data.message);
-		Blabber.warn(data.stats);
-	})
-	.on('disconnect', function() {
-		Blabber.info('Disconnected: Thanks for playing.');
-		process.exit();
-	})
-	.on('connect_failed', function(reason) {
-		Blabber.error(reason);
-		process.exit();
+// Express Routes
+app.get('/', function(req, res) {
+	res.render('index', {
+		host: process.env.HOST || 'http://localhost:8080',
+		username: 'test'
 	});
+});
+
+server.listen(parseInt(process.env.CPORT) || 8081);

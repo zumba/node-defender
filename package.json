@@ -19,7 +19,8 @@
 	},
 	"private": true,
 	"dependencies": {
-		"socket.io-client": "0.9.x",
+		"express": "3.x",
+    	"jade": "0.35.x",
 		"underscore": "1.5.x",
 		"tracer": "0.5.x"
 	},

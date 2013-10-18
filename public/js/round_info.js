@@ -1,6 +1,4 @@
-var _ = require('underscore');
-
-module.exports = (function() {
+var RoundInfo = (function() {
 
 	function RoundInfo(serverData) {
 		this._serverData = serverData;

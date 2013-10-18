@@ -1,0 +1,49 @@
+doctype 5
+html(lang=en)
+	head
+		title Node Defender
+		meta(name="viewport", content="width=device-width, initial-scale=1")
+		link(href="http://fonts.googleapis.com/css?family=Press+Start+2P|Merriweather+Sans:400,700|Open+Sans", rel="stylesheet", type="text/css")
+		link(href="/css/client.css", rel="stylesheet", type="text/css")
+		script.
+			var host = '#{host}';
+		script(src="#{host}/socket.io/socket.io.js")
+		script(src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js")
+		script(src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js")
+	body
+		h1 Node Defender
+		.container
+			#editor.
+				// Available variables:
+				// _ - Access to underscore
+				// roundInfo - API for retrieving information from the server
+				// commander - API for sending commands to the server
+
+				var enemy, attackModes;
+
+				// Find the first enemy and target it.
+				enemy = _.first(roundInfo.getMobs());
+
+				// Target the enemy
+				commander.target(enemy.id);
+
+				// Select the attack mode
+				commander.attackMode('power');
+			#consolelog
+			button#start Start
+		script(src="/js/ace/ace.js")
+		script(src="/js/client.js")
+		script(src="/js/commander.js")
+		script(src="/js/round_info.js")
+		script(src="/js/brain.js")
+		script.
+			$(function() {
+				var editor = ace.edit("editor");
+				editor.setTheme("ace/theme/monokai");
+				editor.getSession().setMode("ace/mode/javascript");
+				$('#start').on('click', function(e) {
+					e.preventDefault();
+					Client.start('#{username}', editor.getSession().getValue());
+				});
+			});
+			
