@@ -1,13 +1,10 @@
 var Client = (function() {
 	var toggleGameMode, connect, setupGame;
-	var startBtn, editorView, gameEnded = false;
+	var startBtn, gameEnded = false;
 
 	toggleGameMode = function() {
 		startBtn = startBtn || $('#start');
-		editorView = editorView || $('#editor');
-
 		startBtn.toggleClass('hidden');
-		editorView.toggleClass('hidden');
 	}
 
 	connect = function(username, callback) {

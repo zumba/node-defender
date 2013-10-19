@@ -1,8 +1,5 @@
 body {
-	background-color: #333;
-	color: #fff;
-	padding: 0;
-	margin: 0;
+	background: #333;
 }
 
 h1 {
@@ -18,19 +15,21 @@ h1 {
 	/* border-bottom: 1px solid #434343; */
 }
 
-.container {
-	width: 900px;
-	margin: 0 auto;
+.main {
 	padding-top: 20px;
+	background: #fffcf1;
+}
+
+.panel-heading {
+	font-family: 'Press Start 2P', cursive;
+}
+
+.btn {
+	font-family: 'Press Start 2P', cursive;
 }
 
 #editor { 
 	height: 500px;
-}
-
-#start {
-	margin-bottom: 5px; 
-	padding: 5px 20px;
 }
 
 #replay, #edit {
@@ -38,13 +37,19 @@ h1 {
 }
 
 #consolelog {
-	max-height: 400px;
+	height: 500px;
 	overflow: auto;
+	background: #272822;
 
 	p { 
 		font-family: 'Ubuntu Mono', sans-serif;
-		line-height: 0;
+		line-height: 30%;
 	}
+}
+
+footer {
+	padding: 25px 0;
+	color: #eee;
 }
 
 .hidden {
