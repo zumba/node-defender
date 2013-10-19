@@ -15,17 +15,21 @@ module.exports = function(grunt) {
 			options : {
 				jshintrc : "jshint.json"
 			},
-			source : 'lib/**'
+			source : 'public/js/*.js'
+		},
+		compass: {
+			dist: {
+				options: {
+					sassDir: 'sass',
+					cssDir: 'public/css',
+					environment: 'production'
+				}
+			}
 		}
 	});
 	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-contrib-compass');
 
 	// Default task.
 	grunt.registerTask('default', ['jshint']);
-
-	// Security task
-	grunt.registerTask('security', 'Generate security md5 hash.', function() {
-		var security = require('./lib/security');
-		grunt.log.writeln('MD5 Hash: ' + security.generateFileHash());
-	})
 };
