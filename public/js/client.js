@@ -1,46 +1,84 @@
 var Client = (function() {
-	var consolelog, _commander, _brain, _roundInfo, log, activateStrategy;
+	var toggleGameMode, connect, setupGame;
+	var startBtn, editorView, gameEnded = false;
 
-	log = function(message) {
-		consolelog.append('<p>' + message + '</p>');
-	};
-	activateStrategy = function(code) {
+	toggleGameMode = function() {
+		startBtn = startBtn || $('#start');
+		editorView = editorView || $('#editor');
 
+		startBtn.toggleClass('hidden');
+		editorView.toggleClass('hidden');
 	}
+
+	connect = function(username, callback) {
+		var socket = io.connect(host + '/defender', {
+			query: 'username=' + username + '&clientHash=staticbound',
+			'force new connection': true,
+			reconnect: false
+		});
+		if (socket) {
+			callback(socket);
+		}
+	}
+
+	setupGame = function(socket, brain, commander) {
+		toggleGameMode();
+		gameEnded = false;
+		socket
+			.on('handshake', function(data) {
+				Blabber.info(data.message);
+			})
+			.on('round', function(data) {
+				var roundInfo, blabber;
+				if (gameEnded) {
+					console.log('ended');
+					return;
+				}
+
+				Blabber.info(sprintf('Round %s', data.round));
+
+				roundInfo = new RoundInfo(data);
+				blabber = new Blabber(roundInfo);
+
+				blabber.displayPlayerHealth();
+				if (data.insult) {
+					Blabber.error(data.insult);
+				}
+
+				if (data.round !== 1){
+					Blabber.info(sprintf('Targeting %s with %s attack mode.', commander.enemyTarget, commander.mode));
+					blabber.displayPlayerActions();
+					blabber.displayEnemyActions();
+            	}
+				brain.onRound(roundInfo);
+				Blabber.debug('<br>');
+			})
+			.on('connect_failed', function(reason) {
+				console.log(reason);
+			})
+			.on('death', function(data) {
+				Blabber.error(data.message);
+				Blabber.debug(JSON.stringify(data.stats));
+				socket.disconnect();
+				toggleGameMode();
+			})
+			.on('disconnect', function() {
+				gameEnded = true;
+			});
+	}
+
 	return {
 		start: function(username, code) {
-			var socket = io.connect(host + '/defender', {
-				query: 'username=' + username + '&clientHash=staticbound',
-				'force new connection': true,
-				reconnect: false
-			});
-			_commander = new Commander(socket);
-			_brain = new Brain(_commander);
-			_brain.setStrategy(code);
-
-			consolelog = $('#consolelog');
-			$('#start').hide();
-			$('#editor').hide();
-
-			socket
-				.on('handshake', function(data) {
-					console.log(data);
-				})
-				.on('round', function(data) {
-					var roundInfo = new RoundInfo(data);
-					log('Round: ' + data.round);
-					if (data.insult) {
-						log(data.insult);
-					}
-					_brain.onRound(roundInfo);
-				})
-				.on('connect_failed', function(reason) {
-					console.log(reason);
-				})
-				.on('death', function(data) {
-					console.log(data);
+			$('#consolelog').html('');
+			connect(username, function(socket) {
+				var commander = new Commander(socket);
+				var brain = new Brain(commander);
+				if (!brain.setStrategy(code)) {
 					socket.disconnect();
-				});
+					return;
+				}
+				setupGame(socket, brain, commander);
+			});	
 		}
 	}
 }());

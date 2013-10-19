@@ -4,7 +4,8 @@ html(lang=en)
 		title Node Defender
 		meta(name="viewport", content="width=device-width, initial-scale=1")
 		link(href="http://fonts.googleapis.com/css?family=Press+Start+2P|Merriweather+Sans:400,700|Open+Sans", rel="stylesheet", type="text/css")
-		link(href="/css/client.css", rel="stylesheet", type="text/css")
+		link(href="http://fonts.googleapis.com/css?family=Ubuntu+Mono",rel="stylesheet", type="text/css")
+		link(href="/css/style.css", rel="stylesheet", type="text/css")
 		script.
 			var host = '#{host}';
 		script(src="#{host}/socket.io/socket.io.js")
@@ -13,6 +14,7 @@ html(lang=en)
 	body
 		h1 Node Defender
 		.container
+			button#start Start
 			#editor.
 				// Available variables:
 				// _ - Access to underscore
@@ -30,12 +32,15 @@ html(lang=en)
 				// Select the attack mode
 				commander.attackMode('power');
 			#consolelog
-			button#start Start
+			button#replay.hidden Replay
+			button#edit.hidden Edit
 		script(src="/js/ace/ace.js")
-		script(src="/js/client.js")
+		script(src="/js/vendor/sprintf.min.js")
 		script(src="/js/commander.js")
 		script(src="/js/round_info.js")
 		script(src="/js/brain.js")
+		script(src="/js/blabber.js")
+		script(src="/js/client.js")
 		script.
 			$(function() {
 				var editor = ace.edit("editor");

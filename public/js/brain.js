@@ -11,9 +11,10 @@ var Brain = (function() {
 		try {
 			eval(code);
 		} catch (e) {
-			console.log(e);
 			console.log('Invalid JS!');
+			return false;
 		}
+		return true;
 	}
 
 	Brain.prototype.onRound = function(roundInfo) {

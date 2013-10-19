@@ -1,10 +1,6 @@
-var _ = require('underscore');
-var tracer = require('tracer').colorConsole({
-	level: 'debug',
-    format : "{{message}}",
-});
+var Blabber = (function() {
 
-module.exports = (function() {
+	var consoleDisplay = $('#consolelog');
 
 	var damageTemplates = {
 		weak: [
@@ -35,6 +31,19 @@ module.exports = (function() {
 		return damageTemplates[type][Math.floor(Math.random() * damageTemplates[type].length)];
 	};
 
+	var htmlWrap = function(message, color) {
+		color = color || 'white';
+		if (typeof message !== 'string') {
+			message = JSON.stringify(message);
+		}
+		return '<p style="color: ' + color + '">' + message + '</p>';
+	}
+
+	var echo = function(message) {
+		consoleDisplay.scrollTop(consoleDisplay.prop('scrollHeight'));
+		consoleDisplay.append(message);
+	}
+
 	function Blabber(roundInfo) {
 		this.round = roundInfo;
 	}
@@ -42,7 +51,7 @@ module.exports = (function() {
 	Blabber.prototype.displayPlayerActions = function() {
 		_.each(this.round.getMyAttacks(), function(attack) {
 			var msg = getWeightedDamageSentence(attack) + ' (%s damage)';
-			Blabber.debug(msg, this.round.playerName(), this.round.getEnemyTypeById(attack.enemyId) + '(' + attack.enemyId + ')', attack.damage);
+			Blabber.debug(sprintf(msg, this.round.playerName(), this.round.getEnemyTypeById(attack.enemyId) + '(' + attack.enemyId + ')', attack.damage));
 		}, this);
 	};
 
@@ -54,10 +63,10 @@ module.exports = (function() {
 			switch(action.type){
 				case 'attack':
 					msg = getWeightedDamageSentence(action) + ' (%s damage)';
-					Blabber.warn(msg, enemyType, this.round.playerName(), action.damage);
+					Blabber.warn(sprintf(msg, enemyType, this.round.playerName(), action.damage));
 					break;
 				case 'move':
-					Blabber.warn('%s moved to position %s', enemyType, action.position);
+					Blabber.warn(sprintf('%s moved to position %s', enemyType, action.position));
 			}
 		}, this);
 	};
@@ -73,7 +82,7 @@ module.exports = (function() {
 			displayMode = 'error';
 		}
 		if (typeof Blabber[displayMode] === 'function') {
-			Blabber[displayMode]('Player health: %s', playerHealth);
+			Blabber[displayMode](sprintf('Player health: %s', playerHealth));
 		}
 	};
 
@@ -81,6 +90,22 @@ module.exports = (function() {
 		Blabber.debug(this.round.debug());
 	};
 
-	return _.extend(Blabber, tracer);
+	// Static API
+	Blabber = _.extend(Blabber, {
+		debug: function(message) {
+			echo(htmlWrap(message, 'green'));
+		},
+		info: function(message) {
+			echo(htmlWrap(message, 'cyan'));
+		},
+		warn: function(message) {
+			echo(htmlWrap(message, 'yellow'));
+		},
+		error: function(message) {
+			echo(htmlWrap(message, 'red'));
+		},
+	});
+
+	return Blabber;
 
 }());
