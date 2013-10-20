@@ -21,8 +21,7 @@
 	"dependencies": {
 		"express": "3.x",
     	"jade": "0.35.x",
-		"underscore": "1.5.x",
-		"tracer": "0.5.x"
+		"underscore": "1.5.x"
 	},
 	"devDependencies": {
     	"grunt": "~0.4.1",
