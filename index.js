@@ -26,6 +26,10 @@ app.set('view engine', 'jade');
 
 // Express Routes
 app.get('/', function(req, res) {
+	if (typeof req.session.username !== 'undefined') {
+		res.redirect('/game');
+		return;
+	}
 	res.render('index');
 });
 
