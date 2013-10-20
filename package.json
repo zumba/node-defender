@@ -7,6 +7,14 @@
 		{
 			"name": "Chris Saylor",
 			"email": "chris.saylor@zumba.com"
+		},
+		{
+			"name": "Stephen Young",
+			"email": "stephen.young@zumba.com"
+		},
+		{
+			"name": "Juan Basso",
+			"email": "juan.basso@zumba.com"
 		}
 	],
 	"main": "index.js",
@@ -29,7 +37,7 @@
     	"grunt-contrib-compass": "0.6.x"
     },
 	"engine": {
-		"node": "0.10.x"
+		"node": ">=0.10.4 <0.12"
 	},
 	"license": "MIT"
 }

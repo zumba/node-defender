@@ -6,6 +6,9 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 
+// Local vars
+var port = parseInt(process.env.CPORT) || 8081;
+
 // Setup Express Server
 app.use(express.static(__dirname + '/public'));
 app.engine('jade', require('jade').__express);
@@ -28,4 +31,5 @@ app.get('/game', function(req, res) {
 	});
 });
 
-server.listen(parseInt(process.env.CPORT) || 8081);
+console.log('Starting up on port ' + port);
+server.listen(port);
