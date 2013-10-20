@@ -1,0 +1,79 @@
+doctype 5
+html(lang=en)
+	head
+		title Node Defender
+		meta(name="viewport", content="width=device-width, initial-scale=1")
+		link(href="http://fonts.googleapis.com/css?family=Press+Start+2P|Merriweather+Sans:400,700|Open+Sans", rel="stylesheet", type="text/css")
+		link(href="http://fonts.googleapis.com/css?family=Ubuntu+Mono",rel="stylesheet", type="text/css")
+		link(href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css", rel="stylesheet", type="text/css")
+		link(href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css", rel="stylesheet", type="text/css")
+		link(href="/css/style.css", rel="stylesheet", type="text/css")
+		script.
+			var host = '#{host}';
+	body
+		header
+			.container
+				h1
+					i.icon-html5 
+					span Node Defender
+		.main
+			.container
+				.row
+					.col-lg-2.col-lg-offset-10
+						button(type="button")#start.btn.btn-primary.pull-right Start Game
+					br
+					br
+				.row
+					.col-lg-7
+						#editor-panel.panel.panel-primary
+							.panel-heading Code Editor
+							#editor.panel-body.
+								// Available variables:
+								// _ - Access to underscore
+								// roundInfo - API for retrieving information from the server
+								// commander - API for sending commands to the server
+
+								var enemy, attackModes;
+
+								// Find the first enemy and target it.
+								enemy = _.first(roundInfo.getMobs());
+
+								// Target the enemy
+								commander.target(enemy.id);
+
+								// Select the attack mode
+								commander.attackMode('power');
+					.col-md-5
+						#console-panel.panel.panel-primary
+							.panel-heading Console
+							#consolelog.panel-body
+		footer
+			.container
+				.row
+					.col-lg-12
+						a(href="http://engineering.zumba.com") 
+							img(src="http://engineering.zumba.com/img/main-logo.png")
+						p.pull-right.ps2p &copy; 2013 Zumba Fitness, LLC. All rights reserved.
+
+		script(src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js")
+		script(src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js")
+		script(src="#{host}/socket.io/socket.io.js")
+		script(src="/js/vendor/ace/ace.js")
+		script(src="/js/vendor/sprintf.min.js")
+		script(src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js")
+		script(src="/js/commander.js")
+		script(src="/js/round_info.js")
+		script(src="/js/brain.js")
+		script(src="/js/blabber.js")
+		script(src="/js/client.js")
+		script.
+			$(function() {
+				var editor = ace.edit("editor");
+				editor.setTheme("ace/theme/monokai");
+				editor.getSession().setMode("ace/mode/javascript");
+				$('#start').on('click', function(e) {
+					e.preventDefault();
+					Client.start('#{username}', editor.getSession().getValue());
+				});
+			});
+			

@@ -6,70 +6,52 @@ html(lang=en)
 		link(href="http://fonts.googleapis.com/css?family=Press+Start+2P|Merriweather+Sans:400,700|Open+Sans", rel="stylesheet", type="text/css")
 		link(href="http://fonts.googleapis.com/css?family=Ubuntu+Mono",rel="stylesheet", type="text/css")
 		link(href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css", rel="stylesheet", type="text/css")
+		link(href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css", rel="stylesheet", type="text/css")
 		link(href="/css/style.css", rel="stylesheet", type="text/css")
 		script.
 			var host = '#{host}';
 	body
 		header
 			.container
-				h1 Node Defender
+				.small-spacer &nbsp;
+				h1
+					i.icon-html5 
+					span Node Defender
+				h2 Defend your node against waves of murderous server side code.
 		.main
 			.container
+				.small-spacer &nbsp;
 				.row
-					.col-lg-2.col-lg-offset-10
-						button(type="button")#start.btn.btn-primary.pull-right Start Game
-					br
-					br
+					.col-md-4.col-md-offset-2
+						button.ps2p.btn.btn-primary.pull-right
+							img(src="/img/twitter.png")
+							span &nbsp;Sign in with Twitter
+					.col-md-4
+						form.form-inline(role="form", method="get", action="/game")
+							.input-group.input-group-large
+								input.input-lg.ps2p(class="form-control", placeholder="nickname", maxlength="30", name="username")
+								span.input-group-btn
+									button.ps2p.btn.btn-success.btn-lg(type="submit", style="padding: 14px 16px") Sign In
+				.small-spacer &nbsp;
 				.row
-					.col-lg-7
-						#editor-panel.panel.panel-primary
-							.panel-heading Code Editor
-							#editor.panel-body.
-								// Available variables:
-								// _ - Access to underscore
-								// roundInfo - API for retrieving information from the server
-								// commander - API for sending commands to the server
-
-								var enemy, attackModes;
-
-								// Find the first enemy and target it.
-								enemy = _.first(roundInfo.getMobs());
-
-								// Target the enemy
-								commander.target(enemy.id);
-
-								// Select the attack mode
-								commander.attackMode('power');
-					.col-md-5
-						#console-panel.panel.panel-primary
-							.panel-heading Console
-							#consolelog.panel-body
+					.col-md-3.col-md-offset-2
+						h3.ps2p Code in NodeJS
+						p.ps2p Construct your strategy with javascript to run against a node server.
+					.col-md-3
+						h3.ps2p Choose your Arsenal
+						p.ps2p Select different attack modes depending on the situation.
+					.col-md-3
+						h3.ps2p Face the Enemy
+						p.ps2p Protect your node from waves are various enemies with different attacks and properties.
+				.large-spacer &nbsp;
 		footer
 			.container
 				.row
 					.col-lg-12
-						img(src="http://engineering.zumba.com/img/main-logo.png")
-						p.pull-right Copyright &copy; 2013 Zumba Fitness, LLC. All rights reserved.
+						a(href="http://engineering.zumba.com") 
+							img(src="http://engineering.zumba.com/img/main-logo.png")
+						p.pull-right.ps2p &copy; 2013 Zumba Fitness, LLC. All rights reserved.
 
 		script(src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js")
 		script(src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js")
-		script(src="#{host}/socket.io/socket.io.js")
-		script(src="/js/vendor/ace/ace.js")
-		script(src="/js/vendor/sprintf.min.js")
 		script(src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js")
-		script(src="/js/commander.js")
-		script(src="/js/round_info.js")
-		script(src="/js/brain.js")
-		script(src="/js/blabber.js")
-		script(src="/js/client.js")
-		script.
-			$(function() {
-				var editor = ace.edit("editor");
-				editor.setTheme("ace/theme/monokai");
-				editor.getSession().setMode("ace/mode/javascript");
-				$('#start').on('click', function(e) {
-					e.preventDefault();
-					Client.start('#{username}', editor.getSession().getValue());
-				});
-			});
-			

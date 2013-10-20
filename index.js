@@ -14,9 +14,16 @@ app.set('view engine', 'jade');
 
 // Express Routes
 app.get('/', function(req, res) {
-	res.render('index', {
+	res.render('index');
+});
+app.get('/game', function(req, res) {
+	// @todo use session for the username stuff
+	if (!req.param('username')) {
+		res.redirect('/');
+	}
+	res.render('game', {
 		host: process.env.HOST || 'http://localhost:8080',
-		username: 'test'
+		username: req.param('username')
 	});
 });
 
