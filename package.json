@@ -27,6 +27,7 @@
 	},
 	"private": true,
 	"dependencies": {
+		"connect-mongo": "0.3.x",
 		"express": "3.x",
     	"jade": "0.35.x",
 		"underscore": "1.5.x",

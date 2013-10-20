@@ -5,21 +5,30 @@ var _ = require('underscore');
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
+var mongoStore = require('connect-mongo')(express);
 
 // Lib
 var TwitterOauth = require('./lib/twitter_oauth.js');
 
 // Local vars
-var port = parseInt(process.env.PORT) || 8081;
+var sessionConfig;
 
 // Setup Express Server
 app.use(express.static(__dirname + '/public'));
 app.use(express.cookieParser());
 app.use(express.bodyParser());
-app.use(express.session({
+sessionConfig = {
 	secret: process.env.SESSION_SECRET || 'supersecret',
 	key: process.env.SESSION_KEY || 'NODE_DEFENDER_SESSION'
-}));
+};
+if (process.env.MONGO_DSN) {
+	sessionConfig.store = new mongoStore({
+		url: process.env.MONGO_DSN
+	});
+} else {
+	console.warn('Mongo sessions not activated.');
+}
+app.use(express.session(sessionConfig));
 app.engine('jade', require('jade').__express);
 app.set('views', __dirname + '/templates');
 app.set('view engine', 'jade');
@@ -100,5 +109,4 @@ app.get('/game', function(req, res) {
 	});
 });
 
-console.log('Starting up on port ' + port);
-server.listen(port);
+server.listen(parseInt(process.env.PORT) || 8081);
