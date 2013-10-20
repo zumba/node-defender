@@ -22,14 +22,18 @@ By default, `HOST` is `http://localhost:8080`.
 
 To defend your node, you will need to implement a strategy against the waves of enemies that will attack you. A sample strategy has been provided to make you familiar with the available API to the server.
 
-To begin, edit `strategy.js` in the root folder and devise your strategy to last as long as possible against the onslaught.
+To begin, login and edit the code in the code editor and devise your strategy to last as long as possible against the onslaught.
 
-1. Edit your name (Default is `player1`). Only alphanumeric, dashes, underscores, parentheses and spaces are allowed.
-2. Implement the `onRound` method. This will be called once per round from the server and provide you with information and a commander.
+1. The code is wrapped in a method that is called once per round and passed the following variables:
 	* The `roundInfo` object contains methods for getting information about the round, such as a list of mobs.
 	* The `commander` is where you will define what enemy to attack and what attack mode you want to use.
-3. Save `strategy.js` and run the game (See "Running the game").
+2. Click "Start Game"
 
 ## Information on the Game
 
 Consult [The Client Wiki](https://github.com/zumba/booth-node-defender-client/wiki) for more information on the attack modes and mob types.
+
+## Configuraion
+
+* `HOST` - Node Defender Game server to connect.
+* `PORT` - Port of the client application.
