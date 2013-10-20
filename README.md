@@ -37,3 +37,5 @@ Consult [The Client Wiki](https://github.com/zumba/booth-node-defender-client/wi
 
 * `HOST` - Node Defender Game server to connect.
 * `PORT` - Port of the client application.
+* `TWITTER_CONSUMER_KEY` - OAuth app key. If not defined, twitter oauth will redirect to home page.
+* `TWITTER_CONSUMER_SECRET` - OAuth app secret. If not dfeined, twitter oauth will redirect to home page.

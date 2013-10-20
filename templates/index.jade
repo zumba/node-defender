@@ -23,11 +23,12 @@ html(lang=en)
 				.small-spacer &nbsp;
 				.row
 					.col-md-4.col-md-offset-2
-						button.ps2p.btn.btn-primary.pull-right
-							img(src="/img/twitter.png")
-							span &nbsp;Sign in with Twitter
+						a(href="/oauth/connect")
+							button.ps2p.btn.btn-primary.pull-right
+								img(src="/img/twitter.png")
+								span &nbsp;Sign in with Twitter
 					.col-md-4
-						form.form-inline(role="form", method="get", action="/game")
+						form.form-inline(role="form", method="post", action="/anonymous")
 							.input-group.input-group-large
 								input.input-lg.ps2p(class="form-control", placeholder="nickname", maxlength="30", name="username")
 								span.input-group-btn
