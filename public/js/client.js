@@ -11,7 +11,8 @@ var Client = (function() {
 		var socket = io.connect(host + '/defender', {
 			query: 'username=' + username + '&clientHash=staticbound',
 			'force new connection': true,
-			reconnect: false
+			reconnect: false,
+			secure: secureClient
 		});
 		if (socket) {
 			callback(socket);

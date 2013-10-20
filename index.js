@@ -23,7 +23,8 @@ app.get('/game', function(req, res) {
 	}
 	res.render('game', {
 		host: process.env.HOST || 'http://localhost:8080',
-		username: req.param('username')
+		username: req.param('username'),
+		secure: !!process.env.SECURECLIENT
 	});
 });
 
