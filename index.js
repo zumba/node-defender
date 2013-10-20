@@ -7,7 +7,7 @@ var app = express();
 var server = require('http').createServer(app);
 
 // Local vars
-var port = parseInt(process.env.CPORT) || 8081;
+var port = parseInt(process.env.PORT) || 8081;
 
 // Setup Express Server
 app.use(express.static(__dirname + '/public'));
