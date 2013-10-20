@@ -51,7 +51,7 @@ app.get('/oauth/connect', function(req, res) {
 		} else {
 			req.session.oauthRequestToken = oauthToken;
 			req.session.oauthRequestTokenSecret = oauthTokenSecret;
-			res.redirect("https://twitter.com/oauth/authorize?oauth_token=" + req.session.oauthRequestToken);      
+			res.redirect("https://api.twitter.com/oauth/authenticate?oauth_token=" + req.session.oauthRequestToken);      
 		}
 	});
 });
