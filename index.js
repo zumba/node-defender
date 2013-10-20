@@ -98,6 +98,11 @@ app.get('/oauth/callback', function(req, res) {
 	);
 });
 
+app.get('/logout', function(req, res) {
+	req.session.destroy();
+	res.redirect('/');
+});
+
 app.get('/game', function(req, res) {
 	if (typeof req.session.username === 'undefined') {
 		res.redirect('/');
