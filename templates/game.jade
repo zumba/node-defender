@@ -21,30 +21,16 @@ html(lang=en)
 		.main
 			.container
 				.row
-					.col-lg-2.col-lg-offset-10
+					.col-lg-12
 						button(type="button")#start.btn.btn-primary.pull-right Start Game
+						button(type="button")#reset.btn.btn-danger.pull-left Reset Strategy
 					br
 					br
 				.row
 					.col-lg-7
 						#editor-panel.panel.panel-primary
 							.panel-heading Code Editor
-							#editor.panel-body.
-								// Available variables:
-								// _ - Access to underscore
-								// roundInfo - API for retrieving information from the server
-								// commander - API for sending commands to the server
-
-								var enemy, attackModes;
-
-								// Find the first enemy and target it.
-								enemy = _.first(roundInfo.getMobs());
-
-								// Target the enemy
-								commander.target(enemy.id);
-
-								// Select the attack mode
-								commander.attackMode('power');
+							#editor.panel-body
 					.col-md-5
 						#console-panel.panel.panel-primary
 							.panel-heading Console
@@ -58,6 +44,22 @@ html(lang=en)
 						p.pull-right.ps2p &copy; 2013 Zumba Fitness, LLC. All rights reserved.
 		a.hidden-xs(href="https://github.com/zumba/booth-node-defender-client")
 			img(style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png", alt="Fork me on GitHub")
+		code#base-strategy.hidden.
+			// Available variables:
+			// _ - Access to underscore
+			// roundInfo - API for retrieving information from the server
+			// commander - API for sending commands to the server
+
+			var enemy, attackModes;
+
+			// Find the first enemy and target it.
+			enemy = _.first(roundInfo.getMobs());
+
+			// Target the enemy
+			commander.target(enemy.id);
+
+			// Select the attack mode
+			commander.attackMode('power');
 
 		script(src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js")
 		script(src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js")
@@ -75,9 +77,13 @@ html(lang=en)
 				var editor = ace.edit("editor");
 				editor.setTheme("ace/theme/monokai");
 				editor.getSession().setMode("ace/mode/javascript");
+				editor.getSession().setValue(Brain.retrieveStrategy());
 				$('#start').on('click', function(e) {
 					e.preventDefault();
 					Client.start('#{username}', editor.getSession().getValue());
+				});
+				$('#reset').on('click', function(e) {
+					editor.getSession().setValue(Brain.getBaseStrategy());
 				});
 			});
 			
