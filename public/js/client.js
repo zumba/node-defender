@@ -29,7 +29,6 @@ var Client = (function() {
 			.on('round', function(data) {
 				var roundInfo, blabber;
 				if (gameEnded) {
-					console.log('ended');
 					return;
 				}
 
@@ -52,7 +51,7 @@ var Client = (function() {
 				Blabber.debug('<br>');
 			})
 			.on('connect_failed', function(reason) {
-				console.log(reason);
+				Blabber.error(reason);
 			})
 			.on('death', function(data) {
 				Blabber.error(data.message);
