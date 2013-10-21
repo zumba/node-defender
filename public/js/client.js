@@ -53,6 +53,10 @@ var Client = (function() {
 			.on('connect_failed', function(reason) {
 				Blabber.error(reason);
 			})
+			.on('mandown', function(data) {
+				Blabber.error(data.message);
+				Blabber.info('<br>');
+			})
 			.on('death', function(data) {
 				Blabber.error(data.message);
 				Blabber.debug(JSON.stringify(data.stats));
