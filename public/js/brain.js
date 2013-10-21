@@ -1,5 +1,5 @@
 var Brain = (function() {
-	var strategy, getBaseStrategy;
+	var strategy;
 
 	var _STORAGE_KEY = 'strategy';
 
@@ -16,10 +16,10 @@ var Brain = (function() {
 	Brain.retrieveStrategy = function() {
 		var code;
 		if (!window.sessionStorage) {
-			return getBaseStrategy();
+			return Brain.getBaseStrategy();
 		}
 		code = sessionStorage.getItem(_STORAGE_KEY);
-		return code || getBaseStrategy();
+		return code || Brain.getBaseStrategy();
 	}
 
 	Brain.storeStrategy = function(code) {
