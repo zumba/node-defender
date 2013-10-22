@@ -65,8 +65,10 @@ div.large-spacer {
 	background: #272822;
 
 	p { 
-		font-family: 'Ubuntu Mono', sans-serif;
-		line-height: 30%;
+		font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+		font-size: 12px;
+		line-height: normal;
+		margin-bottom: 0;
 	}
 }
 

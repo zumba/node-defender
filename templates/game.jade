@@ -4,7 +4,6 @@ html(lang=en)
 		title Node Defender
 		meta(name="viewport", content="width=device-width, initial-scale=1")
 		link(href="//fonts.googleapis.com/css?family=Press+Start+2P|Merriweather+Sans:400,700|Open+Sans", rel="stylesheet", type="text/css")
-		link(href="//fonts.googleapis.com/css?family=Ubuntu+Mono",rel="stylesheet", type="text/css")
 		link(href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css", rel="stylesheet", type="text/css")
 		link(href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css", rel="stylesheet", type="text/css")
 		link(href="/css/style.css", rel="stylesheet", type="text/css")
@@ -85,5 +84,7 @@ html(lang=en)
 				$('#reset').on('click', function(e) {
 					editor.getSession().setValue(Brain.getBaseStrategy());
 				});
+				// Assign a global error handler from the client
+				window.onerror = Client.onerror;
 			});
 			
