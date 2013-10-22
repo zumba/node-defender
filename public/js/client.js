@@ -1,10 +1,27 @@
 var Client = (function() {
-	var toggleGameMode, connect, setupGame;
-	var startBtn, gameEnded = false;
+	var enableStart, disableStart, connect, setupGame, recover;
+	var startBtn, gameEnded = false, _socket;
+
+	enableStart = function() {
+		startBtn = startBtn || $('#start');
+		if (!!startBtn.attr('disabled')) {
+			startBtn.removeAttr('disabled');
+		}
+	}
+
+	disableStart = function() {
+		startBtn = startBtn || $('#start');
+		startBtn.attr('disabled', 'disabled');
+	}
 
 	toggleGameMode = function() {
 		startBtn = startBtn || $('#start');
-		startBtn.toggleClass('hidden');
+		if (!!startBtn.attr('disabled')) {
+			startBtn.removeAttr('disabled');
+			
+		} else {
+			startBtn.attr('disabled', 'disabled');
+		}
 	}
 
 	connect = function(username, callback) {
@@ -20,8 +37,9 @@ var Client = (function() {
 	}
 
 	setupGame = function(socket, brain, commander) {
-		toggleGameMode();
+		disableStart();
 		gameEnded = false;
+		_socket = socket;
 		socket
 			.on('handshake', function(data) {
 				Blabber.info(data.message);
@@ -52,6 +70,7 @@ var Client = (function() {
 			})
 			.on('connect_failed', function(reason) {
 				Blabber.error(reason);
+				recover();
 			})
 			.on('mandown', function(data) {
 				Blabber.error(data.message);
@@ -60,15 +79,27 @@ var Client = (function() {
 			.on('death', function(data) {
 				Blabber.error(data.message);
 				Blabber.debug(JSON.stringify(data.stats));
-				socket.disconnect();
-				toggleGameMode();
 			})
 			.on('disconnect', function() {
+				Blabber.debug('Disconnected. Thanks for playing.');
+				enableStart();
 				gameEnded = true;
 			});
 	}
 
+	recover = function() {
+		if (_socket) {
+			_socket.disconnect();
+		}
+		enableStart();
+	}
+
 	return {
+		onerror: function(message, url, linenumber) {
+			Blabber.error(url + linenumber + ': ' + message);
+			recover();
+			return false;
+		},
 		start: function(username, code) {
 			$('#consolelog').html('');
 			connect(username, function(socket) {
