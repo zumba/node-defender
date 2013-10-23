@@ -11,7 +11,7 @@ var Brain = (function() {
 
 	Brain.getBaseStrategy = function() {
 		return $(_baseStrategyID).html();
-	}
+	};
 
 	Brain.retrieveStrategy = function() {
 		var code;
@@ -20,27 +20,27 @@ var Brain = (function() {
 		}
 		code = sessionStorage.getItem(_STORAGE_KEY);
 		return code || Brain.getBaseStrategy();
-	}
+	};
 
 	Brain.storeStrategy = function(code) {
 		if (!window.sessionStorage) {
 			return;
 		}
 		sessionStorage.setItem(_STORAGE_KEY, code);
-	}
+	};
 
 	Brain.prototype.setStrategy = function(code) {
+		/*jshint evil:true*/
 		// Pad with json
 		Brain.storeStrategy(code);
 		code = 'strategy = function(roundInfo, commander) {' + code + '};';
 		try {
 			eval(code);
 		} catch (e) {
-			console.log('Invalid JS!');
 			return false;
 		}
 		return true;
-	}
+	};
 
 	Brain.prototype.onRound = function(roundInfo) {
 		this.commander.target(_.first(roundInfo.getMobs()).id);

@@ -37,12 +37,12 @@ var Blabber = (function() {
 			message = JSON.stringify(message);
 		}
 		return '<p style="color: ' + color + '">' + message + '</p>';
-	}
+	};
 
 	var echo = function(message) {
 		consoleDisplay.scrollTop(consoleDisplay.prop('scrollHeight'));
 		consoleDisplay.append(message);
-	}
+	};
 
 	function Blabber(roundInfo) {
 		this.round = roundInfo;
