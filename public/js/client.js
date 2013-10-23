@@ -41,7 +41,7 @@ var Client = (function() {
 				Blabber.info(data.message);
 			})
 			.on('round', function(data) {
-				var roundInfo, blabber;
+				var roundInfo, blabber, gameBoard;
 				if (gameEnded) {
 					return;
 				}
@@ -50,6 +50,7 @@ var Client = (function() {
 
 				roundInfo = new RoundInfo(data);
 				blabber = new Blabber(roundInfo);
+				gameBoard = new GameBoard(roundInfo);
 
 				blabber.displayPlayerHealth();
 				if (data.insult) {
@@ -60,6 +61,8 @@ var Client = (function() {
 					Blabber.info(sprintf('Targeting %s with %s attack mode.', commander.enemyTarget, commander.mode));
 					blabber.displayPlayerActions();
 					blabber.displayEnemyActions();
+					gameBoard.displayAttack();
+					gameBoard.displayEnemyAttack();
 				}
 				brain.onRound(roundInfo);
 				Blabber.debug('<br>');

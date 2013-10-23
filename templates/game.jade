@@ -12,10 +12,12 @@ block scripts
 	script(src="#{host}/socket.io/socket.io.js")
 	script(src="/js/vendor/ace/ace.js")
 	script(src="/js/vendor/sprintf.min.js")
+	script(src="//d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.7.2.min.js")
 	script(src="/js/commander.js")
 	script(src="/js/round_info.js")
 	script(src="/js/brain.js")
 	script(src="/js/blabber.js")
+	script(src="/js/game_board.js")
 	script(src="/js/client.js")
 	script.
 		$(function() {
@@ -41,6 +43,7 @@ block scripts
 			$('#reset').on('click', function(e) {
 				editor.getSession().setValue(Brain.getBaseStrategy());
 			});
+			GameBoard.boardSetup();
 			// Assign a global error handler from the client
 			window.onerror = Client.onerror;
 		});
@@ -61,6 +64,11 @@ block content
 			#console-panel.panel.panel-primary
 				.panel-heading Console
 				#consolelog.panel-body
+	.row
+		.col-lg-12
+			#game-board-panel.panel.panel-primary
+				.panel-heading Game Board
+				#gameboard.panel-body
 	code#base-strategy.hidden.
 		// Available variables:
 		// _ - Access to underscore
