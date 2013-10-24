@@ -19,7 +19,7 @@ var Client = (function() {
 		var socket, query;
 		query = 'username=' + username;
 		if (_oauth) {
-			query += '&token=' + _oauth.token + '&secret=' + _oauth.token
+			query += '&token=' + _oauth.token + '&secret=' + _oauth.secret
 		}
 		socket = io.connect(host + '/defender', {
 			query: query,
