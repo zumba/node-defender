@@ -137,7 +137,9 @@ app.get('/game', function(req, res) {
 	res.render('game', {
 		host: config.host,
 		username: req.session.username,
-		secure: config.secure
+		secure: config.secure,
+		token: req.session.oauthAccessToken,
+		secret: req.session.oauthAccessTokenSecret
 	});
 });
 

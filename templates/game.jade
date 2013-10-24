@@ -26,7 +26,14 @@ block scripts
 			editor.getSession().setValue(Brain.retrieveStrategy());
 			$('#start').on('click', function(e) {
 				e.preventDefault();
-				Client.start('#{username}', editor.getSession().getValue());
+				Client.start(
+					'#{username}', 
+					editor.getSession().getValue(),
+					{
+						token: '#{token}',
+						secret: '#{secret}'
+					}						
+				);
 			});
 			$('#reset').on('click', function(e) {
 				editor.getSession().setValue(Brain.getBaseStrategy());
