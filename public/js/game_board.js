@@ -16,13 +16,13 @@ var GameBoard = (function() {
 		POSITION_OFFSET = Math.sqrt(2 * Math.pow(PROFILE_GRAVATAR_SIZE, 2)) / 2,
 		POSITION_WIDTH = Math.sqrt(2 * Math.pow(ENEMY_ICON_SIZE, 2)) + 2,
 		ENEMY_ICONS = {
-			grunt: 'http://images3.wikia.nocookie.net/__cb20130111055640/reignofdragons/images/2/28/Symbol.Melee.30.png',
-			swarmer: 'http://images3.wikia.nocookie.net/__cb20130111055640/reignofdragons/images/2/28/Symbol.Melee.30.png',
-			trooper: 'http://images3.wikia.nocookie.net/__cb20130111055640/reignofdragons/images/2/28/Symbol.Melee.30.png',
-			'speed-demon': 'http://images3.wikia.nocookie.net/__cb20130111055640/reignofdragons/images/2/28/Symbol.Melee.30.png',
-			flyer: 'http://images3.wikia.nocookie.net/__cb20130111055640/reignofdragons/images/2/28/Symbol.Melee.30.png',
-			cluster: 'http://images3.wikia.nocookie.net/__cb20130111055640/reignofdragons/images/2/28/Symbol.Melee.30.png',
-			bruiser: 'http://images3.wikia.nocookie.net/__cb20130111055640/reignofdragons/images/2/28/Symbol.Melee.30.png'
+			grunt: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
+			swarmer: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
+			trooper: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
+			'speed-demon': 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
+			flyer: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
+			cluster: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
+			bruiser: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png'
 		};
 
 	function Position(num, center) {
@@ -31,7 +31,7 @@ var GameBoard = (function() {
 		this.spots = [];
 
 		this.radius = POSITION_OFFSET + this.num * POSITION_WIDTH;
-		this.maxOfSpots = Math.floor((2 * Math.PI * (this.radius + POSITION_WIDTH / 2)) / (ENEMY_ICON_SIZE * 2));
+		this.maxOfSpots = Math.floor((2 * Math.PI * (this.radius + POSITION_WIDTH / 2)) / (ENEMY_ICON_SIZE * 1.5));
 
 		this.renderMark();
 	};
@@ -43,7 +43,7 @@ var GameBoard = (function() {
 	Position.prototype.getFreeSpot = function() {
 		for (var i = 0; i < this.getMaxSpots(); i++) {
 			if (typeof this.spots[i] === 'undefined' || this.spots[i] === false) {
-				return i;
+				return this.spots[i] = i;
 			}
 		}
 		return -1;
@@ -86,12 +86,14 @@ var GameBoard = (function() {
 				return;
 			}
 
+			// Calculate the position on board
 			var spotAngle = 360 / pos.getMaxSpots();
 			var spotRad = spotAngle * Math.PI / 180;
 			var enemyRad = spotRad * posSpot;
-			var fakeRadius = pos.getRadius() + (POSITION_WIDTH / 2);
-			var posX = Math.cos(enemyRad) * fakeRadius - (ENEMY_ICON_SIZE / 2);
-			var posY = Math.sin(enemyRad) * fakeRadius - (ENEMY_ICON_SIZE / 2);
+
+			var marginSpace = (POSITION_WIDTH - ENEMY_ICON_SIZE) / 2;
+			var posX = (pos.getRadius() + marginSpace) * Math.cos(enemyRad);
+			var posY = (pos.getRadius() + marginSpace) * Math.sin(enemyRad);
 
 			var imageObj = new Image();
 			imageObj.onload = function() {
@@ -99,6 +101,7 @@ var GameBoard = (function() {
 					x: _boardCenter.x + posX,
 					y: _boardCenter.y + posY,
 					image: imageObj,
+					rotation: enemyRad,
 					width: ENEMY_ICON_SIZE,
 					height: ENEMY_ICON_SIZE
 				});
