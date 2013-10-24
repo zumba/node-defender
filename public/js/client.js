@@ -1,7 +1,7 @@
 /* globals Blabber, RoundInfo, Commander, Brain */
 var Client = (function() {
 	var enableStart, disableStart, connect, setupGame, recover;
-	var startBtn, gameEnded = false, _socket;
+	var startBtn, gameEnded = false, _socket, _oauth;
 
 	enableStart = function() {
 		startBtn = startBtn || $('#start');
@@ -16,8 +16,13 @@ var Client = (function() {
 	};
 
 	connect = function(username, callback) {
-		var socket = io.connect(host + '/defender', {
-			query: 'username=' + username + '&clientHash=staticbound',
+		var socket, query;
+		query = 'username=' + username;
+		if (_oauth) {
+			query += '&token=' + _oauth.token + '&secret=' + _oauth.secret
+		}
+		socket = io.connect(host + '/defender', {
+			query: query,
 			'force new connection': true,
 			reconnect: false,
 			secure: secureClient
@@ -91,8 +96,9 @@ var Client = (function() {
 			recover();
 			return false;
 		},
-		start: function(username, code) {
+		start: function(username, code, oauth) {
 			$('#consolelog').html('');
+			_oauth = oauth;
 			connect(username, function(socket) {
 				var commander = new Commander(socket);
 				var brain = new Brain(commander);
