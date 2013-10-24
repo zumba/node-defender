@@ -41,6 +41,7 @@ if (process.env.MONGO_DSN) {
 app.use(express.session(sessionConfig));
 app.engine('jade', require('jade').__express);
 app.set('views', __dirname + '/templates');
+app.set('view options', {layout: true});
 app.set('view engine', 'jade');
 
 // Express Routes
