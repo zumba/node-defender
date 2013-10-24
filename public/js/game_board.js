@@ -10,7 +10,7 @@ var GameBoard = (function() {
 	var _positions = [];
 	var _enemies = [];
 
-	var BOARD_SIZE = { w: 800, h: 500 },
+	var BOARD_SIZE = { w: 650, h: 550 },
 		ENEMY_ICON_SIZE = 30,
 		PROFILE_GRAVATAR_SIZE = 30,
 		POSITION_OFFSET = Math.sqrt(2 * Math.pow(PROFILE_GRAVATAR_SIZE, 2)) / 2,

@@ -51,8 +51,9 @@ div.large-spacer {
 	font-size: 0.8em;
 }
 
-#editor { 
-	height: 500px;
+.panel-body {
+	height: 550px;
+	background: #272822;
 }
 
 #replay, #edit {
@@ -60,9 +61,7 @@ div.large-spacer {
 }
 
 #consolelog {
-	height: 500px;
 	overflow: auto;
-	background: #272822;
 
 	p { 
 		font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
@@ -74,7 +73,6 @@ div.large-spacer {
 
 #gameboard {
 	text-align: center;
-	background: #272822;
 }
 
 footer {

@@ -30,6 +30,8 @@ block scripts
 				if (typeof ga === 'function') {
 					ga('send', 'event', 'game', 'start', 'Start Game', ++startedGames);
 				}
+				$('#editor-panel').parent().hide();
+				$('#game-board-panel').parent().removeClass('hidden');
 				e.preventDefault();
 				Client.start(
 					'#{username}', 
@@ -60,15 +62,14 @@ block content
 			#editor-panel.panel.panel-primary
 				.panel-heading Code Editor
 				#editor.panel-body
+		.col-lg-7.hidden
+			#game-board-panel.panel.panel-primary
+				.panel-heading Game Board
+				#gameboard.panel-body
 		.col-md-5
 			#console-panel.panel.panel-primary
 				.panel-heading Console
 				#consolelog.panel-body
-	.row
-		.col-lg-12
-			#game-board-panel.panel.panel-primary
-				.panel-heading Game Board
-				#gameboard.panel-body
 	code#base-strategy.hidden.
 		// Available variables:
 		// _ - Access to underscore
