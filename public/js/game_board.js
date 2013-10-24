@@ -86,8 +86,9 @@ var GameBoard = (function() {
 			var incrementAngle = 360 / pos.getMaxSpots();
 			var incrementRadians = incrementAngle * Math.PI / 180;
 			var startRadians = incrementRadians * posSpot;
-			var posX = Math.cos(startRadians) * pos.getRadius() + (POSITION_WIDTH - ENEMY_ICON_SIZE) / 2;
-			var posY = Math.sin(startRadians) * pos.getRadius();
+			var fakeRadius = pos.getRadius() + (POSITION_WIDTH / 2);
+			var posX = Math.cos(startRadians) * fakeRadius - (ENEMY_ICON_SIZE / 2);
+			var posY = Math.sin(startRadians) * fakeRadius - (ENEMY_ICON_SIZE / 2);
 
 			var imageObj = new Image();
 			imageObj.onload = function() {
