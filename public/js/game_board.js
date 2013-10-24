@@ -83,12 +83,12 @@ var GameBoard = (function() {
 				return;
 			}
 
-			var incrementAngle = 360 / pos.getMaxSpots();
-			var incrementRadians = incrementAngle * Math.PI / 180;
-			var startRadians = incrementRadians * posSpot;
+			var spotAngle = 360 / pos.getMaxSpots();
+			var spotRad = spotAngle * Math.PI / 180;
+			var enemyRad = spotRad * posSpot;
 			var fakeRadius = pos.getRadius() + (POSITION_WIDTH / 2);
-			var posX = Math.cos(startRadians) * fakeRadius - (ENEMY_ICON_SIZE / 2);
-			var posY = Math.sin(startRadians) * fakeRadius - (ENEMY_ICON_SIZE / 2);
+			var posX = Math.cos(enemyRad) * fakeRadius - (ENEMY_ICON_SIZE / 2);
+			var posY = Math.sin(enemyRad) * fakeRadius - (ENEMY_ICON_SIZE / 2);
 
 			var imageObj = new Image();
 			imageObj.onload = function() {
