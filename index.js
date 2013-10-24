@@ -43,6 +43,14 @@ app.engine('jade', require('jade').__express);
 app.set('views', __dirname + '/templates');
 app.set('view options', {layout: true});
 app.set('view engine', 'jade');
+app.use(app.router);
+// 404
+app.use(function(req, res) {
+	res.status(404);
+	res.render('404', {
+		url: req.url
+	});
+});
 
 // Express Routes
 app.all('*', function(req, res, next) {
