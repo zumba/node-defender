@@ -10,8 +10,8 @@ var GameBoard = (function() {
 	var _positions = [];
 	var _enemies = [];
 
-	var POSITION_OFFSET = 70,
-		POSITION_WIDTH = 50,
+	var POSITION_OFFSET = 25,
+		POSITION_WIDTH = 45,
 		ENEMY_ICON_SIZE = 30,
 		ENEMY_ICONS = {
 			grunt: 'http://images3.wikia.nocookie.net/__cb20130111055640/reignofdragons/images/2/28/Symbol.Melee.30.png',
@@ -53,7 +53,8 @@ var GameBoard = (function() {
 			y: this.center.y,
 			radius: this.radius,
 			stroke: '#555',
-			strokeWidth: 2
+			strokeWidth: 1,
+			dashArray: [10, 10]
 		});
 		_boardLayer.add(this.mark);
 	};
@@ -135,7 +136,7 @@ var GameBoard = (function() {
 	GameBoard.renderUser = function() {
 		var imageObj = new Image();
 		imageObj.onload = function() {
-			var imgDimension = 73;
+			var imgDimension = 30;
 			var gravatar = new Kinetic.Image({
 				x: _boardCenter.x - (imgDimension / 2),
 				y: _boardCenter.y - (imgDimension / 2),
@@ -146,7 +147,7 @@ var GameBoard = (function() {
 			_boardLayer.add(gravatar);
 			_boardStage.add(_boardLayer);
 		};
-		imageObj.src = 'https://pbs.twimg.com/profile_images/2614463797/6tubelo97kiphf2jmehx_bigger.jpeg';
+		imageObj.src = 'https://pbs.twimg.com/profile_images/2614463797/6tubelo97kiphf2jmehx_normal.jpeg';
 	};
 
 	GameBoard.renderPositionMarks = function() {
