@@ -13,13 +13,23 @@ var TwitterOauth = require('./lib/twitter_oauth.js');
 // Local vars
 var sessionConfig;
 
+// Configuration
+var config = {
+	host: process.env.HOST || 'http://localhost:8080',
+	port: parseInt(process.env.PORT) || 8081,
+	secure: !!process.env.SECURECLIENT,
+	secureUrl: process.env.SECURECLIENTURL || 'http://localhost:8081',
+	sessionSecret: process.env.SESSION_SECRET || 'supersecret',
+	sessionKey: process.env.SESSION_KEY || 'NODE_DEFENDER_SESSION'
+}
+
 // Setup Express Server
 app.use(express.static(__dirname + '/public'));
 app.use(express.cookieParser());
 app.use(express.bodyParser());
 sessionConfig = {
-	secret: process.env.SESSION_SECRET || 'supersecret',
-	key: process.env.SESSION_KEY || 'NODE_DEFENDER_SESSION'
+	secret: config.sessionSecret,
+	key: config.sessionKey
 };
 if (process.env.MONGO_DSN) {
 	sessionConfig.store = new mongoStore({
@@ -34,6 +44,14 @@ app.set('views', __dirname + '/templates');
 app.set('view engine', 'jade');
 
 // Express Routes
+app.all('*', function(req, res, next) {
+	if (config.secure && req.headers['x-forwarded-proto'] != 'https') {
+		res.redirect(config.secureUrl + req.url);
+		return;
+	}
+	next();
+});
+
 app.get('/', function(req, res) {
 	if (typeof req.session.username !== 'undefined') {
 		res.redirect('/game');
@@ -108,10 +126,10 @@ app.get('/game', function(req, res) {
 		res.redirect('/');
 	}
 	res.render('game', {
-		host: process.env.HOST || 'http://localhost:8080',
+		host: config.host,
 		username: req.session.username,
-		secure: !!process.env.SECURECLIENT
+		secure: config.secure
 	});
 });
 
-server.listen(parseInt(process.env.PORT) || 8081);
+server.listen(config.port);
