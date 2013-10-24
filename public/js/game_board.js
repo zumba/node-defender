@@ -27,11 +27,19 @@ var GameBoard = (function() {
 		this.num = num;
 		this.center = center;
 		this.spots = [];
+
+		this.radius = POSITION_OFFSET + this.num * POSITION_WIDTH;
+		this.maxOfSpots = Math.floor((2 * Math.PI * (this.radius + POSITION_WIDTH / 2)) / (ENEMY_ICON_SIZE * 2));
+
 		this.renderMark();
 	};
 
+	Position.prototype.getMaxSpots = function() {
+		return this.maxOfSpots;
+	};
+
 	Position.prototype.getFreeSpot = function() {
-		for (var i = 0; i < 100; i++) {
+		for (var i = 0; i < this.getMaxSpots(); i++) {
 			if (typeof this.spots[i] === 'undefined' || this.spots[i] === false) {
 				return i;
 			}
@@ -43,7 +51,7 @@ var GameBoard = (function() {
 		this.mark = new Kinetic.Circle({
 			x: this.center.x,
 			y: this.center.y,
-			radius: this.num * POSITION_WIDTH + POSITION_OFFSET,
+			radius: this.radius,
 			stroke: '#555',
 			strokeWidth: 2
 		});
@@ -51,10 +59,13 @@ var GameBoard = (function() {
 	};
 
 	Position.prototype.getRadius = function() {
-		return this.mark.getRadius();
+		return this.radius;
 	};
 
 	Position.prototype.setSpot = function(spot, enemy) {
+		if (spot >= this.maxOfSpots) {
+			return;
+		}
 		this.spots[spot] = enemy;
 	};
 
@@ -72,9 +83,8 @@ var GameBoard = (function() {
 				return;
 			}
 
-			var mpi = Math.PI / 180;
-			var incrementAngle = 360 / 10;
-			var incrementRadians = incrementAngle * mpi;
+			var incrementAngle = 360 / pos.getMaxSpots();
+			var incrementRadians = incrementAngle * Math.PI / 180;
 			var startRadians = incrementRadians * posSpot;
 			var posX = Math.cos(startRadians) * pos.getRadius() + (POSITION_WIDTH - ENEMY_ICON_SIZE) / 2;
 			var posY = Math.sin(startRadians) * pos.getRadius();
