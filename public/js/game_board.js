@@ -10,9 +10,11 @@ var GameBoard = (function() {
 	var _positions = [];
 	var _enemies = [];
 
-	var POSITION_OFFSET = 25,
-		POSITION_WIDTH = 45,
+	var BOARD_SIZE = { w: 800, h: 500 },
 		ENEMY_ICON_SIZE = 30,
+		PROFILE_GRAVATAR_SIZE = 30,
+		POSITION_OFFSET = Math.sqrt(2 * Math.pow(PROFILE_GRAVATAR_SIZE, 2)) / 2,
+		POSITION_WIDTH = Math.sqrt(2 * Math.pow(ENEMY_ICON_SIZE, 2)) + 2,
 		ENEMY_ICONS = {
 			grunt: 'http://images3.wikia.nocookie.net/__cb20130111055640/reignofdragons/images/2/28/Symbol.Melee.30.png',
 			swarmer: 'http://images3.wikia.nocookie.net/__cb20130111055640/reignofdragons/images/2/28/Symbol.Melee.30.png',
@@ -136,13 +138,12 @@ var GameBoard = (function() {
 	GameBoard.renderUser = function() {
 		var imageObj = new Image();
 		imageObj.onload = function() {
-			var imgDimension = 30;
 			var gravatar = new Kinetic.Image({
-				x: _boardCenter.x - (imgDimension / 2),
-				y: _boardCenter.y - (imgDimension / 2),
+				x: _boardCenter.x - (PROFILE_GRAVATAR_SIZE / 2),
+				y: _boardCenter.y - (PROFILE_GRAVATAR_SIZE / 2),
 				image: imageObj,
-				width: imgDimension,
-				height: imgDimension
+				width: PROFILE_GRAVATAR_SIZE,
+				height: PROFILE_GRAVATAR_SIZE
 			});
 			_boardLayer.add(gravatar);
 			_boardStage.add(_boardLayer);
@@ -164,8 +165,8 @@ var GameBoard = (function() {
 	GameBoard.boardSetup = function() {
 		_boardStage = new Kinetic.Stage({
 			container: _boardId,
-			width: 800,
-			height: 500
+			width: BOARD_SIZE.w,
+			height: BOARD_SIZE.h
 		});
 		_boardCenter = {
 			x: _boardStage.getWidth() / 2,
