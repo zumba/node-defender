@@ -72,6 +72,10 @@ var GameBoard = (function() {
 		this.spots[spot] = enemy;
 	};
 
+	Position.prototype.reset = function() {
+		this.spots = [];
+	};
+
 	var renderMobs = function(mobs) {
 		_.each(mobs, function(mob) {
 			if (typeof _enemies[mob.id] !== 'undefined') {
@@ -178,6 +182,17 @@ var GameBoard = (function() {
 		_boardLayer = new Kinetic.Layer();
 
 		GameBoard.renderTemplate();
+	};
+
+	GameBoard.cleanup = function() {
+		_.each(_enemies, function(enemy) {
+			enemy.remove();
+		});
+		_enemies = [];
+
+		_.each(_positions, function(position) {
+			position.reset();
+		});
 	};
 
 	return GameBoard;

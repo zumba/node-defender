@@ -111,6 +111,7 @@ var Client = (function() {
 			connect(username, function(socket) {
 				var commander = new Commander(socket);
 				var brain = new Brain(commander);
+				GameBoard.cleanup();
 				if (!brain.setStrategy(code)) {
 					socket.disconnect();
 					return;
