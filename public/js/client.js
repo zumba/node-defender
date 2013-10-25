@@ -74,7 +74,7 @@ var Client = (function() {
 			})
 			.on('death', function(data) {
 				Blabber.error(data.message);
-				Blabber.debug(JSON.stringify(data.stats));
+				Blabber.debug('Score: ' + data.stats.score);
 				if (typeof ga === 'function') {
 					ga('send', 'event', 'game', 'death', {
 						'metric1': data.score,
