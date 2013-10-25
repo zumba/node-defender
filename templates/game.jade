@@ -20,10 +20,14 @@ block scripts
 	script.
 		$(function() {
 			var editor = ace.edit("editor");
+			var startedGames = 0;
 			editor.setTheme("ace/theme/monokai");
 			editor.getSession().setMode("ace/mode/javascript");
 			editor.getSession().setValue(Brain.retrieveStrategy());
 			$('#start').on('click', function(e) {
+				if (typeof ga === 'function') {
+					ga('send', 'event', 'game', 'start', 'Start Game', ++startedGames);
+				}
 				e.preventDefault();
 				Client.start(
 					'#{username}', 

@@ -75,6 +75,12 @@ var Client = (function() {
 			.on('death', function(data) {
 				Blabber.error(data.message);
 				Blabber.debug(JSON.stringify(data.stats));
+				if (typeof ga === 'function') {
+					ga('send', 'event', 'game', 'death', {
+						'metric1': data.score,
+						'metric2': data.kills
+					});
+				}
 			})
 			.on('disconnect', function() {
 				Blabber.debug('Disconnected. Thanks for playing.');

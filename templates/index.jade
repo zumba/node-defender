@@ -11,7 +11,7 @@ block content
 	.small-spacer &nbsp;
 	.row
 		.col-md-4.col-md-offset-2
-			a(href="/oauth/connect")
+			a#twitter-connect(href="/oauth/connect")
 				button.ps2p.btn.btn-primary.pull-right
 					img(src="/img/twitter.png")
 					span &nbsp;Sign in with Twitter
@@ -33,3 +33,12 @@ block content
 			h3.ps2p Face the Enemy
 			p.ps2p Protect your node from waves are various enemies with different attacks and properties.
 	.large-spacer &nbsp;
+
+block scripts
+	if gaAccount
+		script.
+			$(function() {
+				$('#twitter-connect').on('click', function() {
+					ga('send', 'social', 'twitter', 'connect', window.location.href);
+				});
+			});
