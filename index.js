@@ -20,7 +20,8 @@ var config = {
 	secure: !!process.env.SECURECLIENT,
 	secureUrl: process.env.SECURECLIENTURL || 'http://localhost:8081',
 	sessionSecret: process.env.SESSION_SECRET || 'supersecret',
-	sessionKey: process.env.SESSION_KEY || 'NODE_DEFENDER_SESSION'
+	sessionKey: process.env.SESSION_KEY || 'NODE_DEFENDER_SESSION',
+	gaAccount: process.env.GA_ACCOUNT || false
 }
 
 // Setup Express Server
@@ -43,6 +44,7 @@ app.engine('jade', require('jade').__express);
 app.set('views', __dirname + '/templates');
 app.set('view options', {layout: true});
 app.set('view engine', 'jade');
+app.locals.gaAccount = config.gaAccount;
 app.use(app.router);
 // 404
 app.use(function(req, res) {
