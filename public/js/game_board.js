@@ -13,6 +13,7 @@ var GameBoard = (function() {
 	var BOARD_SIZE = { w: 650, h: 550 },
 		ENEMY_ICON_SIZE = 30,
 		PROFILE_GRAVATAR_SIZE = 30,
+		ATTACK_SPEED = 200, // ms
 		POSITION_OFFSET = Math.sqrt(2 * Math.pow(PROFILE_GRAVATAR_SIZE, 2)) / 2,
 		POSITION_WIDTH = Math.sqrt(2 * Math.pow(ENEMY_ICON_SIZE, 2)) + 2,
 		ENEMY_ICONS = {
@@ -125,17 +126,38 @@ var GameBoard = (function() {
 	}
 
 	GameBoard.prototype.displayAttack = function() {
-		// @todo animate the attack
-
 		_.each(_round.getMyAttacks(), function(attack) {
-			var enemy = attack.enemyId,
-				isEnemyDead = !_.find(_round.getMobs(), function(mob) { return mob.id === enemy; });
+			var enemyId = attack.enemyId,
+				enemy = _enemies[enemyId],
+				isEnemyDead = !_.find(_round.getMobs(), function(mob) { return mob.id === enemyId; });
 
-			if (isEnemyDead) {
-				_positions[attack.position].setSpot(_enemies[enemy].boardPosition, false);
-				_enemies[enemy].remove();
-				delete _enemies[enemy];
-			}
+			var attackLine = new Kinetic.Line({
+				x: _boardCenter.x,
+				y: _boardCenter.y,
+				points: [0, 0, 10, 0],
+				stroke: 'red',
+				rotation: enemy.getRotation()
+			});
+			_boardLayer.add(attackLine);
+			var incX = enemy.getX() - attackLine.getX(),
+				incY = enemy.getY() - attackLine.getY();
+			var anim = new Kinetic.Animation(function(frame) {
+				if (frame.time >= ATTACK_SPEED) {
+					this.stop();
+					attackLine.remove();
+
+					if (isEnemyDead) {
+						_positions[attack.position].setSpot(enemy.boardPosition, false);
+						enemy.remove();
+						delete _enemies[enemyId];
+					}
+					return;
+				}
+				var rate = frame.time / ATTACK_SPEED;
+				attackLine.setX(_boardCenter.x + incX * rate);
+				attackLine.setY(_boardCenter.y + incY * rate);
+			}, _boardLayer);
+			anim.start();
 		});
 	};
 
