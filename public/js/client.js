@@ -81,6 +81,7 @@ var Client = (function() {
 						'metric2': data.kills
 					});
 				}
+				socket.disconnect();
 			})
 			.on('disconnect', function() {
 				Blabber.debug('Disconnected. Thanks for playing.');
