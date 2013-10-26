@@ -60,6 +60,7 @@ app.all('*', function(req, res, next) {
 		res.redirect(config.secureUrl + req.url);
 		return;
 	}
+	app.locals.twitter = req.session.twitter || false;
 	next();
 });
 

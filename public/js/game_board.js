@@ -17,6 +17,7 @@ var GameBoard = (function() {
 		MATH_DEG_TO_RAD = Math.PI / 180,
 		POSITION_OFFSET = Math.sqrt(2 * Math.pow(PROFILE_GRAVATAR_SIZE, 2)) / 2,
 		POSITION_WIDTH = Math.sqrt(2 * Math.pow(ENEMY_ICON_SIZE, 2)) + 2,
+		PLAYER_GRAVATAR_DEFAULT = 'http://c.dryicons.com/images/icon_sets/simplistica/png/32x32/user.png',
 		ENEMY_ICONS = {
 			grunt: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
 			swarmer: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
@@ -180,7 +181,7 @@ var GameBoard = (function() {
 			_boardLayer.add(gravatar);
 			_boardStage.add(_boardLayer);
 		};
-		imageObj.src = 'https://pbs.twimg.com/profile_images/2614463797/6tubelo97kiphf2jmehx_normal.jpeg';
+		imageObj.src = (typeof twitter !== 'undefined' && twitter.profile_image_url_https) || PLAYER_GRAVATAR_DEFAULT;
 	};
 
 	GameBoard.renderPositionMarks = function() {
