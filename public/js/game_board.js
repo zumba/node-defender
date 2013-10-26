@@ -230,7 +230,50 @@ var GameBoard = (function() {
 	};
 
 	GameBoard.prototype.displayEnemyAttack = function(next) {
-		next();
+		var attacks = _.filter(this.round.getEnemyActions() || [], function(action) {
+			return action.type === 'attack';
+		});
+
+		var activeAnimations = 0;
+		if (attacks.length === 0) {
+			next();
+			return;
+		}
+
+		_.each(attacks, function(attack) {
+			var enemyId = attack.id,
+				enemy = _enemies[enemyId],
+				isEnemyDead = !_.find(this.round.getMobs(), function(mob) { return mob.id === enemyId; });
+
+			var enemyCenter = enemy.getCenterPoint();
+			var attackLine = new Kinetic.Line({
+				x: enemyCenter.x,
+				y: enemyCenter.y,
+				points: [0, 0, 10, 0],
+				stroke: 'yellow',
+				rotation: enemy.getRotation() + Math.PI
+			});
+			_boardLayer.add(attackLine);
+
+			var diffX = attackLine.getX() - _boardCenter.x,
+				diffY = attackLine.getY() - _boardCenter.y;
+			var anim = new Kinetic.Animation(function(frame) {
+				if (frame.time >= ATTACK_SPEED) {
+					this.stop();
+					attackLine.remove();
+
+					if (--activeAnimations === 0) {
+						next();
+					}
+					return;
+				}
+				var rate = frame.time / ATTACK_SPEED;
+				attackLine.setX(enemyCenter.x - diffX * rate);
+				attackLine.setY(enemyCenter.y - diffY * rate);
+			}, _boardLayer);
+			activeAnimations++;
+			anim.start();
+		}, this);
 	};
 
 	GameBoard.prototype.displayEnemyMoves = function(next) {
