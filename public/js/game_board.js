@@ -117,7 +117,6 @@ var GameBoard = (function() {
 				pos.setSpot(posSpot, _enemies[mob.id]);
 				_enemies[mob.id].boardPosition = posSpot;
 				_boardLayer.add(_enemies[mob.id]);
-				_boardStage.add(_boardLayer);
 			};
 			imageObj.src = ENEMY_ICONS[mob.type];
 		});
