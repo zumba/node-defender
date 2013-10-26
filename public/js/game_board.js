@@ -15,8 +15,10 @@ var GameBoard = (function() {
 		PROFILE_GRAVATAR_SIZE = 30,
 		ATTACK_SPEED = 200, // ms
 		MATH_DEG_TO_RAD = Math.PI / 180,
+		ENEMY_HYPOTENUSE = Math.sqrt(2 * Math.pow(ENEMY_ICON_SIZE, 2)),
+		ENEMY_HYPOTENUSE_HALF = ENEMY_HYPOTENUSE / 2,
 		POSITION_OFFSET = Math.sqrt(2 * Math.pow(PROFILE_GRAVATAR_SIZE, 2)) / 2,
-		POSITION_WIDTH = Math.sqrt(2 * Math.pow(ENEMY_ICON_SIZE, 2)) + 2,
+		POSITION_WIDTH = ENEMY_HYPOTENUSE + 2,
 		PLAYER_GRAVATAR_DEFAULT = 'http://c.dryicons.com/images/icon_sets/simplistica/png/32x32/user.png',
 		ENEMY_ICONS = {
 			grunt: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
@@ -116,6 +118,7 @@ var GameBoard = (function() {
 				});
 				pos.setSpot(posSpot, _enemies[mob.id]);
 				_enemies[mob.id].boardPosition = posSpot;
+				_enemies[mob.id].startAngle = startAngle;
 				_boardLayer.add(_enemies[mob.id]);
 			};
 			imageObj.src = ENEMY_ICONS[mob.type];
@@ -142,8 +145,13 @@ var GameBoard = (function() {
 				rotation: enemy.getRotation()
 			});
 			_boardLayer.add(attackLine);
-			var incX = enemy.getX() - attackLine.getX(),
-				incY = enemy.getY() - attackLine.getY();
+
+			var enemyCenter = {
+				x: enemy.getX() + (Math.cos(45 * MATH_DEG_TO_RAD + enemy.getRotation() - enemy.startAngle) * ENEMY_HYPOTENUSE_HALF),
+				y: enemy.getY() + (Math.sin(45 * MATH_DEG_TO_RAD + enemy.getRotation() - enemy.startAngle) * ENEMY_HYPOTENUSE_HALF),
+			};
+			var diffX = enemyCenter.x - attackLine.getX(),
+				diffY = enemyCenter.y - attackLine.getY();
 			var anim = new Kinetic.Animation(function(frame) {
 				if (frame.time >= ATTACK_SPEED) {
 					this.stop();
@@ -157,8 +165,8 @@ var GameBoard = (function() {
 					return;
 				}
 				var rate = frame.time / ATTACK_SPEED;
-				attackLine.setX(_boardCenter.x + incX * rate);
-				attackLine.setY(_boardCenter.y + incY * rate);
+				attackLine.setX(_boardCenter.x + diffX * rate);
+				attackLine.setY(_boardCenter.y + diffY * rate);
 			}, _boardLayer);
 			anim.start();
 		});
