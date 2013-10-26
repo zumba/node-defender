@@ -64,15 +64,16 @@ block content
 	.row
 		.col-lg-12
 			button(type="button")#start.btn.btn-primary.pull-right Start Game
-			button(type="button")#reset.btn.btn-danger.pull-left Reset
 		br
 		br
 	.row
 		.col-lg-7
 			#editor-panel.panel.panel-primary
-				.panel-heading 
+				.panel-heading
 					span Code Editor
 					button#toggle-game-board.btn.btn-info.pull-right.panel-btn Game Board
+					button(type="button")#reset.btn.btn-danger.pull-right.panel-btn Reset
+					.clearfix.visible-xs
 				#editor.panel-body
 		.col-lg-7.hidden
 			#game-board-panel.panel.panel-primary
