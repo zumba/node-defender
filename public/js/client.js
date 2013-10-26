@@ -32,7 +32,7 @@ var Client = (function() {
 		}
 	};
 
-	setupGame = function(socket, brain, commander) {
+	setupGame = function(socket, brain, commander, gameBoard) {
 		disableStart();
 		gameEnded = false;
 		_socket = socket;
@@ -41,7 +41,7 @@ var Client = (function() {
 				Blabber.info(data.message);
 			})
 			.on('round', function(data) {
-				var roundInfo, blabber, gameBoard;
+				var roundInfo, blabber;
 				if (gameEnded) {
 					return;
 				}
@@ -50,7 +50,6 @@ var Client = (function() {
 
 				roundInfo = new RoundInfo(data);
 				blabber = new Blabber(roundInfo);
-				gameBoard = new GameBoard(roundInfo);
 
 				blabber.displayPlayerHealth();
 				if (data.insult) {
@@ -61,11 +60,12 @@ var Client = (function() {
 					Blabber.info(sprintf('Targeting %s with %s attack mode.', commander.enemyTarget, commander.mode));
 					blabber.displayPlayerActions();
 					blabber.displayEnemyActions();
-					gameBoard.displayAttack();
-					gameBoard.displayEnemyAttack();
 				}
-				brain.onRound(roundInfo);
-				Blabber.debug('<br>');
+
+				gameBoard.processRound(roundInfo, function() {
+					brain.onRound(roundInfo);
+					Blabber.debug('<br>');
+				});
 			})
 			.on('connect_failed', function(reason) {
 				Blabber.error(reason);
@@ -107,16 +107,17 @@ var Client = (function() {
 		},
 		start: function(username, code, oauth) {
 			$('#consolelog').html('');
+			GameBoard.cleanup();
 			_oauth = oauth;
 			connect(username, function(socket) {
 				var commander = new Commander(socket);
 				var brain = new Brain(commander);
-				GameBoard.cleanup();
+				var gameBoard = new GameBoard();
 				if (!brain.setStrategy(code)) {
 					socket.disconnect();
 					return;
 				}
-				setupGame(socket, brain, commander);
+				setupGame(socket, brain, commander, gameBoard);
 			});	
 		}
 	};

@@ -1,7 +1,4 @@
 var GameBoard = (function() {
-	var _round;
-	var _previousRound;
-
 	var _boardId = 'gameboard';
 	var _boardStage;
 	var _boardLayer;
@@ -167,17 +164,35 @@ var GameBoard = (function() {
 		});
 	};
 
-	function GameBoard(roundInfo) {
-		_previousRound = _round;
-		_round = roundInfo;
-		renderMobs(_round.getMobs());
+	function GameBoard() {
 	}
 
-	GameBoard.prototype.displayAttack = function() {
-		_.each(_round.getMyAttacks(), function(attack) {
+	GameBoard.prototype.processRound = function(roundInfo, next) {
+		this.previousRound = this.round;
+		this.round = roundInfo;
+		renderMobs(this.round.getMobs());
+
+		var gb = this;
+		this.displayPlayerAttack(function() {
+			gb.displayEnemyAttack(function() {
+				gb.displayEnemyMoves(function() {
+					next();
+				});
+			});
+		});
+	};
+
+	GameBoard.prototype.displayPlayerAttack = function(next) {
+		if (!this.round.getMyAttacks()) {
+			next();
+			return;
+		}
+
+		var activeAnimations = 0;
+		_.each(this.round.getMyAttacks(), function(attack) {
 			var enemyId = attack.enemyId,
 				enemy = _enemies[enemyId],
-				isEnemyDead = !_.find(_round.getMobs(), function(mob) { return mob.id === enemyId; });
+				isEnemyDead = !_.find(this.round.getMobs(), function(mob) { return mob.id === enemyId; });
 
 			var attackLine = new Kinetic.Line({
 				x: _boardCenter.x,
@@ -200,17 +215,26 @@ var GameBoard = (function() {
 						enemy.kill();
 						delete _enemies[enemyId];
 					}
+					if (--activeAnimations === 0) {
+						next();
+					}
 					return;
 				}
 				var rate = frame.time / ATTACK_SPEED;
 				attackLine.setX(_boardCenter.x + diffX * rate);
 				attackLine.setY(_boardCenter.y + diffY * rate);
 			}, _boardLayer);
+			activeAnimations++;
 			anim.start();
-		});
+		}, this);
 	};
 
-	GameBoard.prototype.displayEnemyAttack = function() {
+	GameBoard.prototype.displayEnemyAttack = function(next) {
+		next();
+	};
+
+	GameBoard.prototype.displayEnemyMoves = function(next) {
+		next();
 	};
 
 	GameBoard.renderUser = function() {
