@@ -14,6 +14,7 @@ var GameBoard = (function() {
 		ENEMY_ICON_SIZE = 30,
 		PROFILE_GRAVATAR_SIZE = 30,
 		ATTACK_SPEED = 200, // ms
+		MATH_DEG_TO_RAD = Math.PI / 180,
 		POSITION_OFFSET = Math.sqrt(2 * Math.pow(PROFILE_GRAVATAR_SIZE, 2)) / 2,
 		POSITION_WIDTH = Math.sqrt(2 * Math.pow(ENEMY_ICON_SIZE, 2)) + 2,
 		ENEMY_ICONS = {
@@ -93,12 +94,14 @@ var GameBoard = (function() {
 
 			// Calculate the position on board
 			var spotAngle = 360 / pos.getMaxSpots();
-			var spotRad = spotAngle * Math.PI / 180;
-			var enemyRad = spotRad * posSpot;
-
+			var spotRad = spotAngle * MATH_DEG_TO_RAD;
 			var marginSpace = (POSITION_WIDTH - ENEMY_ICON_SIZE) / 2;
-			var posX = (pos.getRadius() + marginSpace) * Math.cos(enemyRad);
-			var posY = (pos.getRadius() + marginSpace) * Math.sin(enemyRad);
+			var radius = pos.getRadius() + marginSpace;
+			var startAngle = Math.asin((ENEMY_ICON_SIZE / 2) / radius);
+			var enemyRad = spotRad * posSpot - startAngle;
+
+			var posX = radius * Math.cos(enemyRad);
+			var posY = radius * Math.sin(enemyRad);
 
 			var imageObj = new Image();
 			imageObj.onload = function() {
