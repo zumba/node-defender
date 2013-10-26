@@ -1,6 +1,6 @@
-# booth-node-defender-client
+# Node Defender
 
-Protect your node client for as long as possible. Defend against waves of murderous server side code that wants nothing more than to kill and disconnect your node client.
+Defend against waves of murderous server side code that wants nothing more than to kill and disconnect your node client.
 
 ## Installation
 
@@ -10,7 +10,7 @@ npm install
 
 ## Running the game
 
-* Define the host and run npm start as follows:
+* Define the host location of the game server and run npm start as follows:
 
 ```bash
 HOST=<server host> npm start
