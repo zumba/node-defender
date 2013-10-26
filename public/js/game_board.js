@@ -257,7 +257,7 @@ var GameBoard = (function() {
 
 	GameBoard.cleanup = function() {
 		_.each(_enemies, function(enemy) {
-			enemy.remove();
+			enemy.kill();
 		});
 		_enemies = [];
 
