@@ -26,11 +26,21 @@ block scripts
 			editor.setTheme("ace/theme/monokai");
 			editor.getSession().setMode("ace/mode/javascript");
 			editor.getSession().setValue(Brain.retrieveStrategy());
+			$('#toggle-game-board').on('click', function(e) {
+				e.preventDefault();
+				$('#editor-panel').parent().addClass('hidden');
+				$('#game-board-panel').parent().removeClass('hidden');
+			});
+			$('#toggle-editor').on('click', function(e) {
+				e.preventDefault();
+				$('#game-board-panel').parent().addClass('hidden');
+				$('#editor-panel').parent().removeClass('hidden');
+			});
 			$('#start').on('click', function(e) {
 				if (typeof ga === 'function') {
 					ga('send', 'event', 'game', 'start', 'Start Game', ++startedGames);
 				}
-				$('#editor-panel').parent().hide();
+				$('#editor-panel').parent().addClass('hidden');
 				$('#game-board-panel').parent().removeClass('hidden');
 				e.preventDefault();
 				Client.start(
@@ -60,11 +70,15 @@ block content
 	.row
 		.col-lg-7
 			#editor-panel.panel.panel-primary
-				.panel-heading Code Editor
+				.panel-heading 
+					span Code Editor
+					button#toggle-game-board.btn.btn-info.pull-right.panel-btn Game Board
 				#editor.panel-body
 		.col-lg-7.hidden
 			#game-board-panel.panel.panel-primary
-				.panel-heading Game Board
+				.panel-heading 
+					span Game Board
+					button#toggle-editor.btn.btn-info.pull-right.panel-btn Editor
 				#gameboard.panel-body
 		.col-md-5
 			#console-panel.panel.panel-primary
