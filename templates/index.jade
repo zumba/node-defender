@@ -9,7 +9,7 @@ block content
 					img(src="/img/twitter.png")
 					span &nbsp;Sign in with Twitter
 		.col-md-4
-			form.form-inline(role="form", method="post", action="/anonymous")
+			form.form-inline.register-form(role="form", method="post", action="/anonymous")
 				.input-group.input-group-large
 					input.input-lg.ps2p(class="form-control", placeholder="nickname", maxlength="30", name="username")
 					span.input-group-btn
@@ -24,10 +24,25 @@ block content
 			p.ps2p Select different attack modes depending on the situation.
 		.col-md-3
 			h3.ps2p Face the Enemy
-			p.ps2p Protect your node from waves are various enemies with different attacks and properties.
+			p.ps2p Protect your node from waves of various enemies with different attacks and properties.
 	.large-spacer &nbsp;
 
 block scripts
+	script.
+		$(function() {
+			$('.register-form').on('submit', function(e) {
+				var input = $(this).find('input');
+				if (!/^[\w\-\(\) ]+$/.test(input.val())) {
+					e.preventDefault();
+					input
+						.tooltip({
+							'title': 'Invalid username.',
+							'trigger': 'manual'
+						})
+						.tooltip('show');
+				}
+			});
+		});
 	if gaAccount
 		script.
 			$(function() {
