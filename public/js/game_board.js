@@ -279,19 +279,27 @@ var GameBoard = (function() {
 	};
 
 	GameBoard.renderUser = function() {
-		var imageObj = new Image();
-		imageObj.onload = function() {
-			var gravatar = new Kinetic.Image({
+		GameBoard._originalGravatar = new Image();
+		GameBoard._originalGravatar.onload = function() {
+			GameBoard._profileImage = new Kinetic.Image({
 				x: _boardCenter.x - (PROFILE_GRAVATAR_SIZE / 2),
 				y: _boardCenter.y - (PROFILE_GRAVATAR_SIZE / 2),
-				image: imageObj,
+				image: GameBoard._originalGravatar,
 				width: PROFILE_GRAVATAR_SIZE,
 				height: PROFILE_GRAVATAR_SIZE
 			});
-			_boardLayer.add(gravatar);
+			_boardLayer.add(GameBoard._profileImage);
 			_boardStage.add(_boardLayer);
 		};
-		imageObj.src = (typeof twitter !== 'undefined' && twitter.profile_image_url_https) || PLAYER_GRAVATAR_DEFAULT;
+		GameBoard._originalGravatar.src = (typeof twitter !== 'undefined' && twitter.profile_image_url_https) || PLAYER_GRAVATAR_DEFAULT;
+
+		GameBoard._defeatedGravatar = new Image();
+		GameBoard._defeatedGravatar.src = '/img/defeated.png';
+	};
+
+	GameBoard.defeated = function() {
+		GameBoard._profileImage.setImage(GameBoard._defeatedGravatar);
+		_boardLayer.draw();
 	};
 
 	GameBoard.renderPositionMarks = function() {
@@ -321,6 +329,8 @@ var GameBoard = (function() {
 	};
 
 	GameBoard.cleanup = function() {
+		GameBoard._profileImage.setImage(GameBoard._originalGravatar);
+
 		_.each(_enemies, function(enemy) {
 			enemy.kill();
 		});
