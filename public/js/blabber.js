@@ -40,7 +40,7 @@ var Blabber = (function() {
 	};
 
 	var echo = function(message) {
-		if (consoleDisplay.prop('scrollHeight') == consoleDisplay.scrollTop() + consoleDisplay.outerHeight()) {
+		if (consoleDisplay.prop('scrollHeight') === consoleDisplay.scrollTop() + consoleDisplay.outerHeight()) {
 			consoleDisplay.append(message);
 			consoleDisplay.scrollTop(consoleDisplay.prop('scrollHeight') - consoleDisplay.outerHeight());
 		} else {

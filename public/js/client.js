@@ -1,4 +1,4 @@
-/* globals Blabber, RoundInfo, Commander, Brain */
+/* globals Blabber, RoundInfo, Commander, Brain, ga */
 var Client = (function() {
 	var enableStart, disableStart, connect, setupGame, recover;
 	var startBtn, inSession = false, gameEnded = false, _socket, _oauth;
@@ -20,7 +20,7 @@ var Client = (function() {
 		var socket, query;
 		query = 'username=' + username;
 		if (_oauth) {
-			query += '&token=' + _oauth.token + '&secret=' + _oauth.secret
+			query += '&token=' + _oauth.token + '&secret=' + _oauth.secret;
 		}
 		socket = io.connect(host + '/defender', {
 			query: query,
