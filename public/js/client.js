@@ -95,7 +95,6 @@ var Client = (function() {
 		if (_socket) {
 			_socket.disconnect();
 		}
-		inSession = false;
 		enableStart();
 	};
 
@@ -106,7 +105,6 @@ var Client = (function() {
 			return false;
 		},
 		start: function(username, code, oauth) {
-			console.log(inSession);
 			if (inSession) {
 				return;
 			}
