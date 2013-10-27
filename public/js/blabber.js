@@ -40,8 +40,13 @@ var Blabber = (function() {
 	};
 
 	var echo = function(message) {
-		consoleDisplay.scrollTop(consoleDisplay.prop('scrollHeight'));
-		consoleDisplay.append(message);
+		if (consoleDisplay.prop('scrollHeight') == consoleDisplay.scrollTop() + consoleDisplay.outerHeight()) {
+			consoleDisplay.append(message);
+			consoleDisplay.scrollTop(consoleDisplay.prop('scrollHeight') - consoleDisplay.outerHeight());
+		} else {
+			consoleDisplay.append(message);
+		}
+		
 	};
 
 	function Blabber(roundInfo) {
