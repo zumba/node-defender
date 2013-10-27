@@ -126,7 +126,7 @@ var GameBoard = (function() {
 				height: ENEMY_ICON_SIZE
 			});
 			_boardLayer.add(enemy.image);
-			_boardStage.add(_boardLayer);
+			_boardLayer.draw();
 		};
 		imageObj.src = ENEMY_ICONS[this.mob.type];
 	};
@@ -289,7 +289,6 @@ var GameBoard = (function() {
 				height: PROFILE_GRAVATAR_SIZE
 			});
 			_boardLayer.add(GameBoard._profileImage);
-			_boardStage.add(_boardLayer);
 		};
 		GameBoard._originalGravatar.src = (typeof twitter !== 'undefined' && twitter.profile_image_url_https) || PLAYER_GRAVATAR_DEFAULT;
 
@@ -324,8 +323,10 @@ var GameBoard = (function() {
 			y: _boardStage.getHeight() / 2
 		};
 		_boardLayer = new Kinetic.Layer();
+		_boardStage.add(_boardLayer);
 
 		GameBoard.renderTemplate();
+		_boardLayer.draw();
 	};
 
 	GameBoard.cleanup = function() {
@@ -339,6 +340,8 @@ var GameBoard = (function() {
 		_.each(_positions, function(position) {
 			position.reset();
 		});
+
+		_boardLayer.draw();
 	};
 
 	return GameBoard;
