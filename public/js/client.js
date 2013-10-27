@@ -1,13 +1,14 @@
 /* globals Blabber, RoundInfo, Commander, Brain */
 var Client = (function() {
 	var enableStart, disableStart, connect, setupGame, recover;
-	var startBtn, gameEnded = false, _socket, _oauth;
+	var startBtn, inSession = false, gameEnded = false, _socket, _oauth;
 
 	enableStart = function() {
 		startBtn = startBtn || $('#start');
 		if (!!startBtn.attr('disabled')) {
 			startBtn.removeAttr('disabled');
 		}
+		inSession = false;
 	};
 
 	disableStart = function() {
@@ -94,6 +95,7 @@ var Client = (function() {
 		if (_socket) {
 			_socket.disconnect();
 		}
+		inSession = false;
 		enableStart();
 	};
 
@@ -104,7 +106,12 @@ var Client = (function() {
 			return false;
 		},
 		start: function(username, code, oauth) {
+			console.log(inSession);
+			if (inSession) {
+				return;
+			}
 			$('#consolelog').html('');
+			inSession = true;
 			_oauth = oauth;
 			connect(username, function(socket) {
 				var commander = new Commander(socket);
