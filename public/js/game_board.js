@@ -221,8 +221,7 @@ var GameBoard = (function() {
 					return;
 				}
 				var rate = frame.time / ATTACK_SPEED;
-				attackLine.setX(_boardCenter.x + diffX * rate);
-				attackLine.setY(_boardCenter.y + diffY * rate);
+				attackLine.setPosition(_boardCenter.x + diffX * rate, _boardCenter.y + diffY * rate);
 			}, _boardLayer);
 			activeAnimations++;
 			anim.start();
@@ -268,8 +267,7 @@ var GameBoard = (function() {
 					return;
 				}
 				var rate = frame.time / ATTACK_SPEED;
-				attackLine.setX(enemyCenter.x - diffX * rate);
-				attackLine.setY(enemyCenter.y - diffY * rate);
+				attackLine.setPosition(enemyCenter.x - diffX * rate, enemyCenter.y - diffY * rate);
 			}, _boardLayer);
 			activeAnimations++;
 			anim.start();
