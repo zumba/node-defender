@@ -132,6 +132,34 @@ var GameBoard = (function() {
 		imageObj.src = ENEMY_ICONS[this.mob.type];
 	};
 
+	Enemy.prototype.updatePosition = function(posNum) {
+		if (!this.spot) {
+			this.mob.position = posNum;
+			this.render();
+			return;
+		}
+
+		var oldSpot = this.spot,
+			newPos = _positions[posNum],
+			newSpot = newPos.getFreeSpot();
+
+		if (newSpot === false) {
+			this.kill();
+			return;
+		}
+
+		var enemyRadius = newPos.getEnemyRadius(),
+			posX = enemyRadius * Math.cos(newSpot.enemyAngle),
+			posY = enemyRadius * Math.sin(newSpot.enemyAngle);
+
+		// @todo add animation
+		this.image.setPosition(_boardCenter.x + posX, _boardCenter.y + posY);
+		this.image.setRotation(newSpot.enemyAngle);
+		newPos.setSpot(newSpot.id, this);
+		oldSpot.position.setSpot(oldSpot.id, false);
+		this.spot = newSpot;
+	};
+
 	Enemy.prototype.getRotation = function() {
 		return this.image === null ? 0 : this.image.getRotation();
 	};
@@ -276,6 +304,13 @@ var GameBoard = (function() {
 	};
 
 	GameBoard.prototype.displayEnemyMoves = function(next) {
+		var moves = _.filter(this.round.getEnemyActions() || [], function(action) {
+			return action.type === 'move';
+		});
+
+		_.each(moves, function(move) {
+			_enemies[move.id].updatePosition(move.position);
+		}, this);
 		next();
 	};
 
