@@ -1,3 +1,4 @@
+/* globals Kinetic, twitter */
 var GameBoard = (function() {
 	var _boardId = 'gameboard';
 	var _boardStage;
@@ -40,7 +41,7 @@ var GameBoard = (function() {
 		this.startAngle = Math.asin((ENEMY_ICON_SIZE / 2) / this.radius);
 
 		this.renderMark();
-	};
+	}
 
 	Position.prototype.getMaxSpots = function() {
 		return this.maxOfSpots;
@@ -98,7 +99,7 @@ var GameBoard = (function() {
 		this.mob = mob;
 		this.spot = null;
 		this.image = null;
-	};
+	}
 
 	Enemy.prototype.render = function() {
 		var pos = _positions[this.mob.position];
@@ -113,7 +114,7 @@ var GameBoard = (function() {
 		var enemy = this,
 			imageObj = new Image();
 		imageObj.onload = function() {
-			var enemyRadius = pos.getEnemyRadius();
+			var enemyRadius = pos.getEnemyRadius(),
 				posX = enemyRadius * Math.cos(posSpot.enemyAngle),
 				posY = enemyRadius * Math.sin(posSpot.enemyAngle);
 

@@ -1,4 +1,4 @@
-/* globals Blabber, RoundInfo, Commander, Brain */
+/* globals Blabber, RoundInfo, Commander, Brain, GameBoard, ga */
 var Client = (function() {
 	var enableStart, disableStart, connect, setupGame, recover;
 	var startBtn, gameEnded = false, _socket, _oauth;
