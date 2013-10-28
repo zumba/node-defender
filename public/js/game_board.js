@@ -177,20 +177,12 @@ var GameBoard = (function() {
 	};
 
 	Enemy.prototype.kill = function() {
-		this.spot.position.setSpot(this.spot.id, false);
-		this.image.remove();
-	};
-
-	var renderMobs = function(mobs) {
-		_.each(mobs, function(mob) {
-			if (typeof _enemies[mob.id] !== 'undefined') {
-				// Do not render if the enemy is on the board
-				return;
-			}
-
-			_enemies[mob.id] = new Enemy(mob);
-			_enemies[mob.id].render();
-		});
+		if (this.spot) {
+			this.spot.position.setSpot(this.spot.id, false);
+		}
+		if (this.image) {
+			this.image.remove();
+		}
 	};
 
 	function GameBoard() {
@@ -199,7 +191,7 @@ var GameBoard = (function() {
 	GameBoard.prototype.processRound = function(roundInfo, next) {
 		this.previousRound = this.round;
 		this.round = roundInfo;
-		renderMobs(this.round.getMobs());
+		this.renderMobs(this.round.getMobs());
 
 		var gb = this;
 		this.displayPlayerAttack(function() {
@@ -208,6 +200,18 @@ var GameBoard = (function() {
 					next();
 				});
 			});
+		});
+	};
+
+	GameBoard.prototype.renderMobs = function(mobs) {
+		_.each(mobs, function(mob) {
+			if (typeof _enemies[mob.id] !== 'undefined') {
+				// Do not render if the enemy is on the board
+				return;
+			}
+
+			_enemies[mob.id] = new Enemy(mob);
+			_enemies[mob.id].render();
 		});
 	};
 
@@ -315,16 +319,17 @@ var GameBoard = (function() {
 	};
 
 	GameBoard.renderUser = function() {
+		GameBoard._profileImage = new Kinetic.Image({
+			x: _boardCenter.x - (PROFILE_GRAVATAR_SIZE / 2),
+			y: _boardCenter.y - (PROFILE_GRAVATAR_SIZE / 2),
+			width: PROFILE_GRAVATAR_SIZE,
+			height: PROFILE_GRAVATAR_SIZE
+		});
+		_boardLayer.add(GameBoard._profileImage);
+
 		GameBoard._originalGravatar = new Image();
 		GameBoard._originalGravatar.onload = function() {
-			GameBoard._profileImage = new Kinetic.Image({
-				x: _boardCenter.x - (PROFILE_GRAVATAR_SIZE / 2),
-				y: _boardCenter.y - (PROFILE_GRAVATAR_SIZE / 2),
-				image: GameBoard._originalGravatar,
-				width: PROFILE_GRAVATAR_SIZE,
-				height: PROFILE_GRAVATAR_SIZE
-			});
-			_boardLayer.add(GameBoard._profileImage);
+			GameBoard._profileImage.setImage(this);
 		};
 		GameBoard._originalGravatar.src = (typeof twitter !== 'undefined' && twitter.profile_image_url_https) || PLAYER_GRAVATAR_DEFAULT;
 
