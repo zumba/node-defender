@@ -15,7 +15,10 @@ html(lang=en)
 				h1
 					i.icon-html5 
 					span Node Defender
-					a.btn.btn-warning.pull-right(href="/logout") Logout
+					ul.nav.nav-pills.pull-right
+						li: a.btn.btn-info(href="/how-to-play") How to Play
+						li: a.btn.btn-info(href="/ude2013") UDE 2013
+						li: a.btn.btn-warning.pull-right(href="/logout") Logout
 		.main
 			.container
 				block content
@@ -25,7 +28,7 @@ html(lang=en)
 					.col-lg-12
 						a(href="http://engineering.zumba.com") 
 							img(src="//www.zumba.com/img/logo.png")
-						p.pull-right.ps2p &copy; 2013 Zumba Fitness, LLC. All rights reserved.
+						p.pull-right.ps2p-small &copy; 2013 Zumba Fitness, LLC. All rights reserved.
 		a.hidden-xs(href="https://github.com/zumba/node-defender")
 			img(style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png", alt="Fork me on GitHub")
 
