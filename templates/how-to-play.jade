@@ -1,0 +1,126 @@
+extends layout
+
+block content
+    row
+        .col-md-12
+            h1.ps2p How to play
+            .small-spacer
+    row
+        .col-md-12
+            h4.ps2p Impementing Your Strategy
+            p.ps2p.
+                You are provided with a few global variables to constructor your overall strategy.
+                Your strategy is run once per round with new enemy waves occurring after six rounds (or if there are no enemies left).
+            .small-spacer
+    row
+        .col-md-8
+            h4.ps2p commander
+            #commander.code-editor.
+                /**
+                 * Set the attack mode for the next command.
+                 *
+                 * You can programatically get a list of available attacks from commander.availableAttackModes,
+                 * which consists of modes such as: 'power', 'rapid', 'collateral', 'ranged', and 'defensive'.
+                 *
+                 * @param string mode
+                 * @return void
+                 */
+                Commander.prototype.attackMode = function(mode) {};
+
+                /**
+                 * Target an enemy for your next attack.
+                 *
+                 * The target should be a valid enemy ID that is available from the roundInfo object.
+                 *
+                 * @param integer enemyId
+                 * @return void
+                 */
+                Commander.prototype.target = function(enemyId) {};
+
+                /**
+                 * Get a list of available attack modes.
+                 *
+                 * @return array
+                 */
+                Commander.prototype.availableAttackModes = function() {};
+            .small-spacer
+
+        .col-md-4
+            p.ps2p The <code>commander</code> object is provided to send commands to the server to instruct it what it should target and what enemy it should attack.
+    row
+        .col-md-8
+            h4.ps2p roundInfo
+            #roundinfo.code-editor.
+                /**
+                 * Retrieve information about what the enemy did.
+                 *
+                 * The action taken by an enemy may be an attack or a move.
+                 *
+                 * @return array
+                 */
+                RoundInfo.prototype.getEnemyActions = function() {};
+
+                /**
+                 * Retreive what the enemy type is by an ID.
+                 *
+                 * @param integer id
+                 * @return string
+                 */
+                RoundInfo.prototype.getEnemyTypeById = function(id) {};
+
+                /**
+                 * Retrieve a list of mobs that contains enemy information.
+                 *
+                 * Some returned info includes: id, type, position, and health.
+                 *
+                 * @return array
+                 */
+                RoundInfo.prototype.getMobs = function() {};
+
+                /**
+                 * Retrieve information about my attacks.
+                 *
+                 * This returns a list as some attacks may have multiple outcomes.
+                 *
+                 * @return array
+                 */
+                RoundInfo.prototype.getMyAttacks = function() {};
+
+                /**
+                 * Retrieve the current round.
+                 *
+                 * @return integer
+                 */
+                RoundInfo.prototype.getRound = function() {};
+
+                /**
+                 * Get a quick key-value pair summary of the game.
+                 *
+                 * @return object
+                 */
+                RoundInfo.prototype.getSummary = function() {};
+
+                /**
+                 * Retrieve the player's health.
+                 *
+                 * @return integer
+                 */
+                RoundInfo.prototype.playerHealth = function() {};
+            .small-spacer
+        .col-md-4
+            p.ps2p The <code>roundInfo</code> object is provided to give insight to the player about the current round.
+            p.ps2p This includes player info, enemies actions, and enemy stats.
+
+block scripts
+    script(src="/js/vendor/ace/ace.js")
+    script.
+        $(function() {
+            _.each(['commander', 'roundinfo'], function(code) {
+                var editor = ace.edit(code);
+                editor.setReadOnly(true);
+                editor.setTheme('ace/theme/monokai');
+                editor.getSession().setMode('ace/mode/javascript');
+            });
+        });
+
+
