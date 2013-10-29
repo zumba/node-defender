@@ -1,18 +1,18 @@
 extends layout
 
 block content
-    row
+    .row
         .col-md-12
             h1.ps2p How to play
             .small-spacer
-    row
+    .row
         .col-md-12
-            h4.ps2p Impementing Your Strategy
+            h3.ps2p Impementing Your Strategy
             p.ps2p.
                 You are provided with a few global variables to constructor your overall strategy.
                 Your strategy is run once per round with new enemy waves occurring after six rounds (or if there are no enemies left).
             .small-spacer
-    row
+    .row
         .col-md-8
             h4.ps2p commander
             #commander.code-editor.
@@ -47,7 +47,7 @@ block content
 
         .col-md-4
             p.ps2p The <code>commander</code> object is provided to send commands to the server to instruct it what it should target and what enemy it should attack.
-    row
+    .row
         .col-md-8
             h4.ps2p roundInfo
             #roundinfo.code-editor.
@@ -106,10 +106,57 @@ block content
                  * @return integer
                  */
                 RoundInfo.prototype.playerHealth = function() {};
-            .small-spacer
         .col-md-4
             p.ps2p The <code>roundInfo</code> object is provided to give insight to the player about the current round.
             p.ps2p This includes player info, enemies actions, and enemy stats.
+    .row
+        .col-md-12
+            h3.ps2p Scoring
+            ul
+                li: span.ps2p-small 10,000pts for destroying all active enemies and forcing a new wave to spawn.
+                li: span.ps2p-small 1000pts per round survived.
+                li: span.ps2p-small 100pts per enemy destroyed.
+                li: span.ps2p-small 1pt per damage dealt to enemies.
+    .row
+        .col-md-12
+            h3.ps2p Attack modes
+            ul
+                li: <code>power</code> - <span class="ps2p-small">Power Attack Mode</span>
+                    ul
+                        li: span.ps2p-small Basic attack that does a good amount of damage to one enemy.
+                        li: span.ps2p-small Your client will take slightly more damage from enemies when using this mode.
+                        li: span.ps2p-small Range: 2. Not as effective if the enemy is 3 or more positions away from your client.
+                li: <code>rapid</code> - <span class="ps2p-small">Rapid Attack Mode</span>
+                    ul
+                        li: span.ps2p-small Lower damage attack that fires three shots.
+                        li: span.ps2p-small If the primary target dies after the first or second shot, remaining shots will hit additional targets belonging to the same wave.
+                        li: span.ps2p-small Range: 3. Will be slightly less effective if the enemy is in position 4 or 5.
+                li: <code>ranged</code> - <span class="ps2p-small">Ranged Attack Mode</span>
+                    ul
+                        li: span.ps2p-small Does increasingly more damage the farther away an enemy is.
+                        li: span.ps2p-small Does very little damage if an enemy is close to the player (position 0 or 1).
+                        li: span.ps2p-small Range: 5.
+                li: <code>collateral</code> - <span class="ps2p-small">Collateral Attack Mode</span>
+                    ul
+                        li: span.ps2p-small A low power attack that damages all enemies who share the same position as your target.
+                        li: span.ps2p-small Your client will take more damage from enemies when using this mode.
+                        li: span.ps2p-small Range: 5. Distance does not affect the damage of this attack
+                li: <code>defensive</code> - <span class="ps2p-small">Defensive Attack Mode</span>
+                    ul
+                        li: span.ps2p-small A very low power attack.
+                        li: span.ps2p-small Significantly reduces all incoming enemy damage.
+                        li: span.ps2p-small Range: 0. Does very little damage at all ranges, but might do a tiny bit more damage if the enemy is at point blank range.
+    .row
+        .col-md-12
+            h3.ps2p Enemy Types
+            ul
+                li: span.ps2p-small grunt - A basic melee and ranged enemy that does medium damage.
+                li: span.ps2p-small swarmer - A low damage ranged enemy with low health that usually spawn in packs.
+                li: span.ps2p-small trooper - A medium to high damaging melee enemy with some armor.
+                li: span.ps2p-small speed-demon - A low damage, low health enemy that is evasive.
+                li: span.ps2p-small flyer - A low damage enemy that does more damage as it moves further away.
+                li: span.ps2p-small cluster - An enemy that does less damage the lower it's health is.
+                li: span.ps2p-small bruiser - A very high damage melee enemy.
 
 block scripts
     script(src="/js/vendor/ace/ace.js")
