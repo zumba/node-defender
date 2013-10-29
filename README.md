@@ -35,8 +35,15 @@ Consult [The Client Wiki](https://github.com/zumba/booth-node-defender-client/wi
 
 ## Configuraion
 
+All the below configurations are optional.
+
 * `HOST` - Node Defender Game server to connect.
-* `PORT` - Port of the client application.
+* `PORT` - Port of the client application. Default to 8081.
+* `SECURECLIENT` - `0` or `1` to force HTTPS only. Default to false.
+* `SECURECLIENTURL` - Url when HTTPS only is on.
+* `SESSION_SECRET` - Secret code for session encryption.
+* `SESSION_KEY` - Cookie name for the session.
 * `TWITTER_CONSUMER_KEY` - OAuth app key. If not defined, twitter oauth will redirect to home page.
 * `TWITTER_CONSUMER_SECRET` - OAuth app secret. If not dfeined, twitter oauth will redirect to home page.
 * `MONGO_DSN` - Mongo connector used for session storage in the form of `mongodb://user:password@host/db/collection`. If not specified will fallback to node sessions storage.
+* `GA_ACCOUNT` - Google Analytics account code.
