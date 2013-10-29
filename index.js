@@ -48,13 +48,6 @@ app.locals.gaAccount = config.gaAccount;
 app.use(app.router);
 
 // Middleware
-app.use(function(req, res, next) {
-	if (config.secure && req.headers['x-forwarded-proto'] != 'https') {
-		res.redirect(config.secureUrl + req.url);
-		return;
-	}
-	next();
-});
 app.use(function(req, res) {
 	res.status(404);
 	res.render('404', {
@@ -141,6 +134,15 @@ router = {
 		});
 	}
 };
+
+// Force HTTPs if configured
+app.all('*', function(req, res, next) {
+	if (config.secure && req.headers['x-forwarded-proto'] != 'https') {
+		res.redirect(config.secureUrl + req.url);
+		return;
+	}
+	next();
+});
 
 // Routes
 app.get('/', router.root);
