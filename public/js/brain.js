@@ -43,6 +43,7 @@ var Brain = (function() {
 	};
 
 	Brain.prototype.onRound = function(roundInfo) {
+		this.commander.roundToken = roundInfo.getRoundToken();
 		this.commander.target(_.first(roundInfo.getMobs()).id);
 		strategy(roundInfo, this.commander);
 		this.commander.sendToServer();

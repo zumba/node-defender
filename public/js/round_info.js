@@ -34,6 +34,10 @@ var RoundInfo = (function() {
 		return this._serverData.round;
 	};
 
+	RoundInfo.prototype.getRoundToken = function() {
+		return this._serverData.roundToken;
+	};
+
 	RoundInfo.prototype.getSummary = function() {
 		return this._serverData.summary;
 	};

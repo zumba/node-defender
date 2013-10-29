@@ -1,3 +1,4 @@
+/* globals _ */
 var Commander = (function() {
 
 	var _defender;
@@ -9,6 +10,7 @@ var Commander = (function() {
 		'collateral',
 		'defensive'
 	];
+	var _consumedTokenCache = [];
 
 	function Commander(defender) {
 		_defender = defender;
@@ -39,11 +41,15 @@ var Commander = (function() {
 	};
 
 	Commander.prototype.sendToServer = function() {
-		// @todo check for a target or no (healing?)
+		if (_.contains(_consumedTokenCache, this.roundToken)) {
+			return;
+		}
 		_defender.emit('action', {
-			'target': this.enemyTarget,
-			'attack_mode': this.mode
+			target: this.enemyTarget,
+			attack_mode: this.mode,
+			roundToken: this.roundToken
 		});
+		_consumedTokenCache.push(this.roundToken);
 	};
 
 	return Commander;
