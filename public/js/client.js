@@ -1,4 +1,4 @@
-/* globals Blabber, RoundInfo, Commander, Brain, ga */
+/* globals Blabber, RoundInfo, Commander, Brain, GameBoard, ga */
 var Client = (function() {
 	var enableStart, disableStart, connect, setupGame, recover;
 	var startBtn, inSession = false, gameEnded = false, _socket, _oauth;
@@ -33,7 +33,7 @@ var Client = (function() {
 		}
 	};
 
-	setupGame = function(socket, brain, commander) {
+	setupGame = function(socket, brain, commander, gameBoard) {
 		disableStart();
 		gameEnded = false;
 		_socket = socket;
@@ -62,8 +62,11 @@ var Client = (function() {
 					blabber.displayPlayerActions();
 					blabber.displayEnemyActions();
 				}
-				brain.onRound(roundInfo);
-				Blabber.debug('<br>');
+
+				gameBoard.processRound(roundInfo, function() {
+					brain.onRound(roundInfo);
+					Blabber.debug('<br>');
+				});
 			})
 			.on('connect_failed', function(reason) {
 				Blabber.error(reason);
@@ -76,6 +79,7 @@ var Client = (function() {
 			.on('death', function(data) {
 				Blabber.error(data.message);
 				Blabber.debug('Score: ' + data.stats.score);
+				GameBoard.defeated();
 				if (typeof ga === 'function') {
 					ga('send', 'event', 'game', 'death', {
 						'metric1': data.score,
@@ -109,16 +113,18 @@ var Client = (function() {
 				return;
 			}
 			$('#consolelog').html('');
+			GameBoard.cleanup();
 			inSession = true;
 			_oauth = oauth;
 			connect(username, function(socket) {
 				var commander = new Commander(socket);
 				var brain = new Brain(commander);
+				var gameBoard = new GameBoard();
 				if (!brain.setStrategy(code)) {
 					socket.disconnect();
 					return;
 				}
-				setupGame(socket, brain, commander);
+				setupGame(socket, brain, commander, gameBoard);
 			});	
 		}
 	};

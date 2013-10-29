@@ -6,10 +6,12 @@ block scripts
 	script(src="#{host}/socket.io/socket.io.js")
 	script(src="/js/vendor/ace/ace.js")
 	script(src="/js/vendor/sprintf.min.js")
+	script(src="//d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.7.2.min.js")
 	script(src="/js/commander.js")
 	script(src="/js/round_info.js")
 	script(src="/js/brain.js")
 	script(src="/js/blabber.js")
+	script(src="/js/game_board.js")
 	script(src="/js/client.js")
 	script.
 		$(function() {
@@ -18,10 +20,22 @@ block scripts
 			editor.setTheme("ace/theme/monokai");
 			editor.getSession().setMode("ace/mode/javascript");
 			editor.getSession().setValue(Brain.retrieveStrategy());
+			$('#toggle-game-board').on('click', function(e) {
+				e.preventDefault();
+				$('#editor-panel').parent().addClass('hidden');
+				$('#game-board-panel').parent().removeClass('hidden');
+			});
+			$('#toggle-editor').on('click', function(e) {
+				e.preventDefault();
+				$('#game-board-panel').parent().addClass('hidden');
+				$('#editor-panel').parent().removeClass('hidden');
+			});
 			$('#start').on('click', function(e) {
 				if (typeof ga === 'function') {
 					ga('send', 'event', 'game', 'start', 'Start Game', ++startedGames);
 				}
+				$('#editor-panel').parent().addClass('hidden');
+				$('#game-board-panel').parent().removeClass('hidden');
 				e.preventDefault();
 				Client.start(
 					'#{username}', 
@@ -35,6 +49,7 @@ block scripts
 			$('#reset').on('click', function(e) {
 				editor.getSession().setValue(Brain.getBaseStrategy());
 			});
+			GameBoard.boardSetup();
 			// Assign a global error handler from the client
 			window.onerror = Client.onerror;
 		});
@@ -43,14 +58,23 @@ block content
 	.row
 		.col-lg-12
 			button(type="button")#start.btn.btn-primary.pull-right Start Game
-			button(type="button")#reset.btn.btn-danger.pull-left Reset
 		br
 		br
 	.row
 		.col-lg-7
 			#editor-panel.panel.panel-primary
-				.panel-heading Code Editor
+				.panel-heading
+					span Code Editor
+					button#toggle-game-board.btn.btn-info.pull-right.panel-btn Game Board
+					button(type="button")#reset.btn.btn-danger.pull-right.panel-btn Reset
+					.clearfix.visible-xs
 				#editor.panel-body
+		.col-lg-7.hidden
+			#game-board-panel.panel.panel-primary
+				.panel-heading 
+					span Game Board
+					button#toggle-editor.btn.btn-info.pull-right.panel-btn Editor
+				#gameboard.panel-body
 		.col-md-5
 			#console-panel.panel.panel-primary
 				.panel-heading Console
