@@ -31,21 +31,6 @@ block content
 	.large-spacer &nbsp;
 
 block scripts
-	script.
-		$(function() {
-			$('.register-form').on('submit', function(e) {
-				var input = $(this).find('input');
-				if (!/^[\w\-\(\) ]+$/.test(input.val())) {
-					e.preventDefault();
-					input
-						.tooltip({
-							'title': 'Invalid username.',
-							'trigger': 'manual'
-						})
-						.tooltip('show');
-				}
-			});
-		});
 	if gaAccount
 		script.
 			$(function() {
