@@ -15,7 +15,7 @@ html(lang=en)
 				row
 					.col-lg-12
 						h1
-							i.icon-html5 
+							i.icon-html5
 							span <a href="/">Node Defender</a>
 							ul.nav.nav-pills.pull-right
 								li: a.btn.btn-info(href="/how-to-play") How to Play
@@ -27,7 +27,7 @@ html(lang=en)
 			.container
 				.row
 					.col-lg-12
-						a(href="http://engineering.zumba.com") 
+						a(href="http://engineering.zumba.com")
 							img(src="//www.zumba.com/img/logo.png")
 						p.pull-right.ps2p-small &copy; 2013 Zumba Fitness, LLC. All rights reserved.
 		a.hidden-xs(href="https://github.com/zumba/node-defender")
@@ -47,4 +47,7 @@ html(lang=en)
 		if twitter
 			script.
 				var twitter = !{JSON.stringify(twitter)}
+
+		script(data-main="js/main" src="js/vendor/require.js")
+
 		block scripts
