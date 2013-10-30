@@ -34,7 +34,7 @@ block scripts
 	if gaAccount
 		script.
 			$(function() {
-				$('#twitter-connect').on('click', function() {
+				$(document).on('click', '#twitter-connect', function() {
 					ga('send', 'social', 'twitter', 'connect', window.location.href);
 				});
 			});
