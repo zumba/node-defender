@@ -38,7 +38,7 @@ var GameBoard = (function() {
 		this.enemyRadius = this.getRadius() + POSITION_PADDING;
 		this.maxOfSpots = Math.floor((2 * Math.PI * (this.radius + POSITION_WIDTH / 2)) / (ENEMY_ICON_SIZE * 1.5));
 		this.spotAngle = 2 * Math.PI / this.maxOfSpots;
-		this.startAngle = Math.asin((ENEMY_ICON_SIZE / 2) / this.radius);
+		this.startAngle = Math.asin((ENEMY_ICON_SIZE / 2) / this.enemyRadius);
 
 		this.renderMark();
 	}
