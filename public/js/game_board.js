@@ -133,7 +133,7 @@ var GameBoard = (function() {
 	};
 
 	Enemy.prototype.updatePosition = function(posNum) {
-		if (!this.spot) {
+		if (!this.spot || !this.image) {
 			this.mob.position = posNum;
 			this.render();
 			return;
