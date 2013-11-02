@@ -227,16 +227,17 @@ var GameBoard = (function() {
 				enemy = _enemies[enemyId],
 				isEnemyDead = !_.find(this.round.getMobs(), function(mob) { return mob.id === enemyId; });
 
-			var attackLine = new Kinetic.Line({
-				x: _boardCenter.x,
-				y: _boardCenter.y,
-				points: [0, 0, 10, 0],
-				stroke: 'red',
-				rotation: enemy.getRotation()
-			});
+			var enemyCenter = enemy.getCenterPoint(),
+				attackAngle = Math.atan((enemyCenter.y - _boardCenter.y) / (enemyCenter.x - _boardCenter.x)),
+				attackLine = new Kinetic.Line({
+					x: _boardCenter.x,
+					y: _boardCenter.y,
+					points: [0, 0, 10, 0],
+					stroke: 'red',
+					rotation: attackAngle
+				});
 			_boardLayer.add(attackLine);
 
-			var enemyCenter = enemy.getCenterPoint();
 			var diffX = enemyCenter.x - attackLine.getX(),
 				diffY = enemyCenter.y - attackLine.getY();
 			var anim = new Kinetic.Animation(function(frame) {
@@ -277,14 +278,15 @@ var GameBoard = (function() {
 				enemy = _enemies[enemyId],
 				isEnemyDead = !_.find(this.round.getMobs(), function(mob) { return mob.id === enemyId; });
 
-			var enemyCenter = enemy.getCenterPoint();
-			var attackLine = new Kinetic.Line({
-				x: enemyCenter.x,
-				y: enemyCenter.y,
-				points: [0, 0, 10, 0],
-				stroke: 'yellow',
-				rotation: enemy.getRotation() + Math.PI
-			});
+			var enemyCenter = enemy.getCenterPoint(),
+				attackAngle = Math.atan((enemyCenter.y - _boardCenter.y) / (enemyCenter.x - _boardCenter.x)),
+				attackLine = new Kinetic.Line({
+					x: enemyCenter.x,
+					y: enemyCenter.y,
+					points: [0, 0, 10, 0],
+					stroke: 'yellow',
+					rotation: attackAngle
+				});
 			_boardLayer.add(attackLine);
 
 			var diffX = attackLine.getX() - _boardCenter.x,
