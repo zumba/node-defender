@@ -171,8 +171,8 @@ var GameBoard = (function() {
 
 		var a45 = Math.PI / 4; // 45 deg to rad
 		return {
-			x: this.image.getX() + (Math.cos(a45 + this.image.getRotation() - this.spot.position.getInitialAngle()) * ENEMY_HYPOTENUSE_HALF),
-			y: this.image.getY() + (Math.sin(a45 + this.image.getRotation() - this.spot.position.getInitialAngle()) * ENEMY_HYPOTENUSE_HALF),
+			x: this.image.getX() + (Math.cos(a45 + this.image.getRotation()) * ENEMY_HYPOTENUSE_HALF),
+			y: this.image.getY() + (Math.sin(a45 + this.image.getRotation()) * ENEMY_HYPOTENUSE_HALF),
 		};
 	};
 
