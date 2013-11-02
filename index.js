@@ -142,6 +142,7 @@ app.all('*', function(req, res, next) {
 		return;
 	}
 	app.locals.twitter = req.session.twitter || false;
+	app.locals.username = req.session.username || false;
 	next();
 });
 
