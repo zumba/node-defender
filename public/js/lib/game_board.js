@@ -346,7 +346,7 @@ var GameBoard = (function() {
 	GameBoard.mute = false;
 
 	GameBoard.playSound = function(id, func) {
-		if (GameBoard.mute || typeof _sounds[id] === 'undefinied') {
+		if (GameBoard.mute || typeof _sounds[id] === 'undefined') {
 			return;
 		}
 
