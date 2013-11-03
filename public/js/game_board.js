@@ -1,4 +1,4 @@
-/* globals Kinetic, twitter */
+/* globals Kinetic, Howl, twitter */
 var GameBoard = (function() {
 	var _boardId = 'gameboard';
 	var _boardStage;
@@ -369,11 +369,10 @@ var GameBoard = (function() {
 	};
 
 	GameBoard.loadSoundEffects = function() {
-		var $board = $('#' + _boardId);
 		_.each(SOUND_EFFECTS, function(url, id) {
-			var $obj = $('<audio id="sound-' + id + '" preload="auto" src="' + url + '"></audio>');
-			_sounds[id] = $obj[0];
-			$board.append($obj);
+			_sounds[id] = new Howl({
+				urls: [url]
+			});
 		});
 	};
 
