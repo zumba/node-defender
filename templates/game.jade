@@ -47,6 +47,10 @@ block scripts
 				);
 			});
 			$('#reset').on('click', function(e) {
+				e.preventDefault();
+				if (!confirm('Are you sure you want to reset your strategy?')) {
+					return;
+				}
 				editor.getSession().setValue(Brain.getBaseStrategy());
 			});
 			GameBoard.boardSetup();
