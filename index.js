@@ -1,5 +1,8 @@
 /* globals process */
 
+// App Monitoring
+require('newrelic');
+
 // Modules
 var _ = require('underscore');
 var express = require('express');
