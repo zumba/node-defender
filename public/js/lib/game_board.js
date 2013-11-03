@@ -13,11 +13,12 @@ var GameBoard = (function() {
 		PROFILE_GRAVATAR_SIZE = 30,
 		ATTACK_SPEED = 200, // ms
 		MATH_DEG_TO_RAD = Math.PI / 180,
+		MATH_45DEG_TO_RAD = Math.PI / 4,
 		ENEMY_HYPOTENUSE = Math.sqrt(2 * Math.pow(ENEMY_ICON_SIZE, 2)),
 		ENEMY_HYPOTENUSE_HALF = ENEMY_HYPOTENUSE / 2,
 		POSITION_OFFSET = Math.sqrt(2 * Math.pow(PROFILE_GRAVATAR_SIZE, 2)) / 2,
 		POSITION_WIDTH = ENEMY_HYPOTENUSE + 2,
-		POSITION_PADDING = (POSITION_WIDTH - ENEMY_ICON_SIZE) / 2,
+		POSITION_PADDING = POSITION_WIDTH / 2,
 		PLAYER_GRAVATAR_DEFAULT = 'http://c.dryicons.com/images/icon_sets/simplistica/png/32x32/user.png',
 		ENEMY_ICONS = {
 			grunt: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
@@ -38,7 +39,6 @@ var GameBoard = (function() {
 		this.enemyRadius = this.getRadius() + POSITION_PADDING;
 		this.maxOfSpots = Math.floor((2 * Math.PI * (this.radius + POSITION_WIDTH / 2)) / (ENEMY_ICON_SIZE * 1.5));
 		this.spotAngle = 2 * Math.PI / this.maxOfSpots;
-		this.startAngle = Math.asin((ENEMY_ICON_SIZE / 2) / this.enemyRadius);
 
 		this.renderMark();
 	}
@@ -53,7 +53,7 @@ var GameBoard = (function() {
 				return this.spots[i] = {
 					id: i,
 					position: this,
-					enemyAngle: this.spotAngle * i - this.startAngle
+					enemyAngle: this.spotAngle * i
 				};
 			}
 		}
@@ -78,10 +78,6 @@ var GameBoard = (function() {
 
 	Position.prototype.getEnemyRadius = function() {
 		return this.enemyRadius;
-	};
-
-	Position.prototype.getInitialAngle = function() {
-		return this.startAngle;
 	};
 
 	Position.prototype.setSpot = function(spot, enemy) {
@@ -115,14 +111,15 @@ var GameBoard = (function() {
 			imageObj = new Image();
 		imageObj.onload = function() {
 			var enemyRadius = pos.getEnemyRadius(),
-				posX = enemyRadius * Math.cos(posSpot.enemyAngle),
-				posY = enemyRadius * Math.sin(posSpot.enemyAngle);
+				angle = posSpot.enemyAngle,
+				posX = enemyRadius * Math.cos(angle) - (Math.cos(MATH_45DEG_TO_RAD + angle) * ENEMY_HYPOTENUSE_HALF),
+				posY = enemyRadius * Math.sin(angle) - (Math.sin(MATH_45DEG_TO_RAD + angle) * ENEMY_HYPOTENUSE_HALF);
 
 			enemy.image = new Kinetic.Image({
 				x: _boardCenter.x + posX,
 				y: _boardCenter.y + posY,
 				image: imageObj,
-				rotation: posSpot.enemyAngle,
+				rotation: angle,
 				width: ENEMY_ICON_SIZE,
 				height: ENEMY_ICON_SIZE
 			});
@@ -149,12 +146,13 @@ var GameBoard = (function() {
 		}
 
 		var enemyRadius = newPos.getEnemyRadius(),
-			posX = enemyRadius * Math.cos(newSpot.enemyAngle),
-			posY = enemyRadius * Math.sin(newSpot.enemyAngle);
+			angle = newSpot.enemyAngle,
+			posX = enemyRadius * Math.cos(angle) - (Math.cos(MATH_45DEG_TO_RAD + angle) * ENEMY_HYPOTENUSE_HALF),
+			posY = enemyRadius * Math.sin(angle) - (Math.sin(MATH_45DEG_TO_RAD + angle) * ENEMY_HYPOTENUSE_HALF);
 
 		// @todo add animation
 		this.image.setPosition(_boardCenter.x + posX, _boardCenter.y + posY);
-		this.image.setRotation(newSpot.enemyAngle);
+		this.image.setRotation(angle);
 		newPos.setSpot(newSpot.id, this);
 		oldSpot.position.setSpot(oldSpot.id, false);
 		this.spot = newSpot;
@@ -169,10 +167,9 @@ var GameBoard = (function() {
 			return { x: 0, y: 0};
 		}
 
-		var a45 = Math.PI / 4; // 45 deg to rad
 		return {
-			x: this.image.getX() + (Math.cos(a45 + this.image.getRotation()) * ENEMY_HYPOTENUSE_HALF),
-			y: this.image.getY() + (Math.sin(a45 + this.image.getRotation()) * ENEMY_HYPOTENUSE_HALF),
+			x: this.image.getX() + (Math.cos(MATH_45DEG_TO_RAD + this.image.getRotation()) * ENEMY_HYPOTENUSE_HALF),
+			y: this.image.getY() + (Math.sin(MATH_45DEG_TO_RAD + this.image.getRotation()) * ENEMY_HYPOTENUSE_HALF),
 		};
 	};
 
