@@ -5,6 +5,7 @@ block scripts
 		var secureClient = #{secure};
 	script(src="#{host}/socket.io/socket.io.js")
 	script(src="/js/vendor/ace/ace.js")
+	script(src="/js/vendor/howler.min.js")
 	script(src="/js/vendor/sprintf.min.js")
 	script(src="//d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.7.2.min.js")
 	script(src="/js/commander.js")
@@ -29,6 +30,20 @@ block scripts
 				e.preventDefault();
 				$('#game-board-panel').parent().addClass('hidden');
 				$('#editor-panel').parent().removeClass('hidden');
+			});
+			$('#toggle-sound').on('click', function(e) {
+				var $this = $(this);
+
+				e.preventDefault();
+				if ($this.data('status') === 'muted') {
+					GameBoard.mute = false;
+					$this.data('status', 'unmuted');
+					$this.html('<i class="icon-volume-up" style="font-size: 1.4em"/>');
+				} else {
+					GameBoard.mute = true;
+					$this.data('status', 'muted');
+					$this.html('<i class="icon-volume-off" style="font-size: 1.4em"/>');
+				}
 			});
 			$('#start').on('click', function(e) {
 				if (typeof ga === 'function') {
@@ -78,6 +93,7 @@ block content
 				.panel-heading 
 					span Game Board
 					button#toggle-editor.btn.btn-info.pull-right.panel-btn Editor
+					button#toggle-sound.btn.btn-info.pull-right.panel-btn(data-status="unmuted"): i.icon-volume-up(style="font-size: 1.4em")
 				#gameboard.panel-body
 		.col-md-5
 			#console-panel.panel.panel-primary

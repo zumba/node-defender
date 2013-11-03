@@ -1,4 +1,4 @@
-/* globals Kinetic, twitter */
+/* globals Kinetic, Howl, twitter */
 var GameBoard = (function() {
 	var _boardId = 'gameboard';
 	var _boardStage;
@@ -7,6 +7,7 @@ var GameBoard = (function() {
 
 	var _positions = [];
 	var _enemies = [];
+	var _sounds = [];
 
 	var BOARD_SIZE = { w: 650, h: 550 },
 		ENEMY_ICON_SIZE = 30,
@@ -28,7 +29,16 @@ var GameBoard = (function() {
 			flyer: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
 			cluster: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
 			bruiser: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png'
+		},
+		SOUND_EFFECTS = {
+			'defeated': '/sounds/effects/defeated.wav',
+			'enemy-attack': '/sounds/effects/enemy-attack.wav',
+			'player-attack': '/sounds/effects/player-attack.wav',
+			'rapid-attack': '/sounds/effects/rapid-attack.wav',
+			'enemy-death': '/sounds/effects/enemy-death.wav'
 		};
+
+	var suppressDeathSound = false;
 
 	function Position(num, center) {
 		this.num = num;
@@ -180,6 +190,15 @@ var GameBoard = (function() {
 		if (this.image) {
 			this.image.remove();
 		}
+		if (!suppressDeathSound) {
+			suppressDeathSound = true;
+			GameBoard.playSound('enemy-death', function() {
+				setTimeout(function() {
+					suppressDeathSound = false;
+				}, 400);
+			});
+		}
+		
 	};
 
 	function GameBoard() {
@@ -213,13 +232,19 @@ var GameBoard = (function() {
 	};
 
 	GameBoard.prototype.displayPlayerAttack = function(next) {
-		if (!this.round.getMyAttacks()) {
+		var attacks = this.round.getMyAttacks();
+		if (!attacks) {
 			next();
 			return;
 		}
 
+		if (attacks.length === 1) {
+			GameBoard.playSound('player-attack');
+		} else {
+			GameBoard.playSound('rapid-attack');
+		}
 		var activeAnimations = 0;
-		_.each(this.round.getMyAttacks(), function(attack) {
+		_.each(attacks, function(attack) {
 			var enemyId = attack.enemyId,
 				enemy = _enemies[enemyId],
 				isEnemyDead = !_.find(this.round.getMobs(), function(mob) { return mob.id === enemyId; });
@@ -270,6 +295,7 @@ var GameBoard = (function() {
 			return;
 		}
 
+		GameBoard.playSound('enemy-attack');
 		_.each(attacks, function(attack) {
 			var enemyId = attack.id,
 				enemy = _enemies[enemyId],
@@ -317,6 +343,16 @@ var GameBoard = (function() {
 		next();
 	};
 
+	GameBoard.mute = false;
+
+	GameBoard.playSound = function(id, func) {
+		if (GameBoard.mute || typeof _sounds[id] === 'undefinied') {
+			return;
+		}
+
+		_sounds[id].play(func);
+	};
+
 	GameBoard.renderUser = function() {
 		GameBoard._profileImage = new Kinetic.Image({
 			x: _boardCenter.x - (PROFILE_GRAVATAR_SIZE / 2),
@@ -340,6 +376,7 @@ var GameBoard = (function() {
 	GameBoard.defeated = function() {
 		GameBoard._profileImage.setImage(GameBoard._defeatedGravatar);
 		_boardLayer.draw();
+		GameBoard.playSound('defeated');
 	};
 
 	GameBoard.renderPositionMarks = function() {
@@ -351,6 +388,14 @@ var GameBoard = (function() {
 	GameBoard.renderTemplate = function() {
 		GameBoard.renderUser();
 		GameBoard.renderPositionMarks();
+	};
+
+	GameBoard.loadSoundEffects = function() {
+		_.each(SOUND_EFFECTS, function(url, id) {
+			_sounds[id] = new Howl({
+				urls: [url]
+			});
+		});
 	};
 
 	GameBoard.boardSetup = function() {
@@ -367,6 +412,7 @@ var GameBoard = (function() {
 		_boardStage.add(_boardLayer);
 
 		GameBoard.renderTemplate();
+		GameBoard.loadSoundEffects();
 		_boardLayer.draw();
 	};
 
