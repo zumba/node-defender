@@ -31,6 +31,20 @@ block scripts
 				$('#game-board-panel').parent().addClass('hidden');
 				$('#editor-panel').parent().removeClass('hidden');
 			});
+			$('#toggle-sound').on('click', function(e) {
+				var $this = $(this);
+
+				e.preventDefault();
+				if ($this.data('status') === 'muted') {
+					GameBoard.mute = false;
+					$this.data('status', 'unmuted');
+					$this.text('Mute');
+				} else {
+					GameBoard.mute = true;
+					$this.data('status', 'muted');
+					$this.text('Unmute');
+				}
+			});
 			$('#start').on('click', function(e) {
 				if (typeof ga === 'function') {
 					ga('send', 'event', 'game', 'start', 'Start Game', ++startedGames);
@@ -75,6 +89,7 @@ block content
 				.panel-heading 
 					span Game Board
 					button#toggle-editor.btn.btn-info.pull-right.panel-btn Editor
+					button#toggle-sound.btn.btn-info.pull-right.panel-btn(data-status="unmuted") Mute
 				#gameboard.panel-body
 		.col-md-5
 			#console-panel.panel.panel-primary

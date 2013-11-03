@@ -192,7 +192,7 @@ var GameBoard = (function() {
 		}
 		if (!suppressDeathSound) {
 			suppressDeathSound = true;
-			_sounds['enemy-death'].play(function() {
+			GameBoard.playSound('enemy-death', function() {
 				setTimeout(function() {
 					suppressDeathSound = false;
 				}, 400);
@@ -239,9 +239,9 @@ var GameBoard = (function() {
 		}
 
 		if (attacks.length === 1) {
-			_sounds['player-attack'].play();
+			GameBoard.playSound('player-attack');
 		} else {
-			_sounds['rapid-attack'].play();
+			GameBoard.playSound('rapid-attack');
 		}
 		var activeAnimations = 0;
 		_.each(attacks, function(attack) {
@@ -295,7 +295,7 @@ var GameBoard = (function() {
 			return;
 		}
 
-		_sounds['enemy-attack'].play();
+		GameBoard.playSound('enemy-attack');
 		_.each(attacks, function(attack) {
 			var enemyId = attack.id,
 				enemy = _enemies[enemyId],
@@ -343,6 +343,16 @@ var GameBoard = (function() {
 		next();
 	};
 
+	GameBoard.mute = false;
+
+	GameBoard.playSound = function(id, func) {
+		if (GameBoard.mute || typeof _sounds[id] === 'undefinied') {
+			return;
+		}
+
+		_sounds[id].play(func);
+	};
+
 	GameBoard.renderUser = function() {
 		GameBoard._profileImage = new Kinetic.Image({
 			x: _boardCenter.x - (PROFILE_GRAVATAR_SIZE / 2),
@@ -366,7 +376,7 @@ var GameBoard = (function() {
 	GameBoard.defeated = function() {
 		GameBoard._profileImage.setImage(GameBoard._defeatedGravatar);
 		_boardLayer.draw();
-		_sounds['defeated'].play();
+		GameBoard.playSound('defeated');
 	};
 
 	GameBoard.renderPositionMarks = function() {
