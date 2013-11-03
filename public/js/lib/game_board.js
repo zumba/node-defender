@@ -7,6 +7,7 @@ var GameBoard = (function() {
 
 	var _positions = [];
 	var _enemies = [];
+	var _sounds = [];
 
 	var BOARD_SIZE = { w: 650, h: 550 },
 		ENEMY_ICON_SIZE = 30,
@@ -28,6 +29,12 @@ var GameBoard = (function() {
 			flyer: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
 			cluster: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
 			bruiser: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png'
+		},
+		SOUND_EFFECTS = {
+			'defeated': '/sounds/effects/defeated.wav',
+			'enemy-attack': '/sounds/effects/enemy-attack.mp3',
+			'player-attack': '/sounds/effects/player-attack.mp3',
+			'rapid-attack': '/sounds/effects/rapid-attack.mp3'
 		};
 
 	function Position(num, center) {
@@ -213,13 +220,19 @@ var GameBoard = (function() {
 	};
 
 	GameBoard.prototype.displayPlayerAttack = function(next) {
-		if (!this.round.getMyAttacks()) {
+		var attacks = this.round.getMyAttacks();
+		if (!attacks) {
 			next();
 			return;
 		}
 
+		if (attacks.length === 1) {
+			_sounds['player-attack'].play();
+		} else {
+			_sounds['rapid-attack'].play();
+		}
 		var activeAnimations = 0;
-		_.each(this.round.getMyAttacks(), function(attack) {
+		_.each(attacks, function(attack) {
 			var enemyId = attack.enemyId,
 				enemy = _enemies[enemyId],
 				isEnemyDead = !_.find(this.round.getMobs(), function(mob) { return mob.id === enemyId; });
@@ -270,6 +283,7 @@ var GameBoard = (function() {
 			return;
 		}
 
+		_sounds['enemy-attack'].play();
 		_.each(attacks, function(attack) {
 			var enemyId = attack.id,
 				enemy = _enemies[enemyId],
@@ -340,6 +354,7 @@ var GameBoard = (function() {
 	GameBoard.defeated = function() {
 		GameBoard._profileImage.setImage(GameBoard._defeatedGravatar);
 		_boardLayer.draw();
+		_sounds['defeated'].play();
 	};
 
 	GameBoard.renderPositionMarks = function() {
@@ -351,6 +366,15 @@ var GameBoard = (function() {
 	GameBoard.renderTemplate = function() {
 		GameBoard.renderUser();
 		GameBoard.renderPositionMarks();
+	};
+
+	GameBoard.loadSoundEffects = function() {
+		var $board = $('#' + _boardId);
+		_.each(SOUND_EFFECTS, function(url, id) {
+			var $obj = $('<audio id="sound-' + id + '" preload="auto" src="' + url + '"></audio>');
+			_sounds[id] = $obj[0];
+			$board.append($obj);
+		});
 	};
 
 	GameBoard.boardSetup = function() {
@@ -367,6 +391,7 @@ var GameBoard = (function() {
 		_boardStage.add(_boardLayer);
 
 		GameBoard.renderTemplate();
+		GameBoard.loadSoundEffects();
 		_boardLayer.draw();
 	};
 
