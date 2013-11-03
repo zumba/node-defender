@@ -32,10 +32,13 @@ var GameBoard = (function() {
 		},
 		SOUND_EFFECTS = {
 			'defeated': '/sounds/effects/defeated.wav',
-			'enemy-attack': '/sounds/effects/enemy-attack.mp3',
-			'player-attack': '/sounds/effects/player-attack.mp3',
-			'rapid-attack': '/sounds/effects/rapid-attack.mp3'
+			'enemy-attack': '/sounds/effects/enemy-attack.wav',
+			'player-attack': '/sounds/effects/player-attack.wav',
+			'rapid-attack': '/sounds/effects/rapid-attack.wav',
+			'enemy-death': '/sounds/effects/enemy-death.wav'
 		};
+
+	var suppressDeathSound = false;
 
 	function Position(num, center) {
 		this.num = num;
@@ -187,6 +190,15 @@ var GameBoard = (function() {
 		if (this.image) {
 			this.image.remove();
 		}
+		if (!suppressDeathSound) {
+			suppressDeathSound = true;
+			_sounds['enemy-death'].play(function() {
+				setTimeout(function() {
+					suppressDeathSound = false;
+				}, 400);
+			});
+		}
+		
 	};
 
 	function GameBoard() {
