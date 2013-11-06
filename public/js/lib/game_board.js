@@ -1,5 +1,5 @@
-/* globals Kinetic, Howl, twitter */
-var GameBoard = (function() {
+/* globals twitter, define */
+define(['underscore', 'kinetic', 'howler'], function(_, Kinetic, Howl){
 	var _boardId = 'gameboard';
 	var _boardStage;
 	var _boardLayer;
@@ -198,11 +198,10 @@ var GameBoard = (function() {
 				}, 400);
 			});
 		}
-		
+
 	};
 
-	function GameBoard() {
-	}
+	var GameBoard = function GameBoard() {};
 
 	GameBoard.prototype.processRound = function(roundInfo, next) {
 		this.previousRound = this.round;
@@ -392,7 +391,7 @@ var GameBoard = (function() {
 
 	GameBoard.loadSoundEffects = function() {
 		_.each(SOUND_EFFECTS, function(url, id) {
-			_sounds[id] = new Howl({
+			_sounds[id] = new Howl.Howl({
 				urls: [url]
 			});
 		});
@@ -432,5 +431,4 @@ var GameBoard = (function() {
 	};
 
 	return GameBoard;
-
-}());
+});

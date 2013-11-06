@@ -1,5 +1,8 @@
 extends layout
 
+block vars
+	- var page = 'index'
+
 block content
 	.small-spacer &nbsp;
 	.row
@@ -31,25 +34,10 @@ block content
 	.large-spacer &nbsp;
 
 block scripts
-	script.
-		$(function() {
-			$('.register-form').on('submit', function(e) {
-				var input = $(this).find('input');
-				if (!/^[\w\-\(\) ]+$/.test(input.val())) {
-					e.preventDefault();
-					input
-						.tooltip({
-							'title': 'Invalid username.',
-							'trigger': 'manual'
-						})
-						.tooltip('show');
-				}
-			});
-		});
 	if gaAccount
 		script.
 			$(function() {
-				$('#twitter-connect').on('click', function() {
+				$(document).on('click', '#twitter-connect', function() {
 					ga('send', 'social', 'twitter', 'connect', window.location.href);
 				});
 			});
