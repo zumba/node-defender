@@ -1,4 +1,5 @@
-var Blabber = (function() {
+/* globals define */
+define(['underscore', 'jquery', 'sprintf'], function(_, $, sprintf){
 
 	var consoleDisplay = $('#consolelog');
 
@@ -46,7 +47,7 @@ var Blabber = (function() {
 		} else {
 			consoleDisplay.append(message);
 		}
-		
+
 	};
 
 	function Blabber(roundInfo) {
@@ -112,5 +113,4 @@ var Blabber = (function() {
 	});
 
 	return Blabber;
-
-}());
+});

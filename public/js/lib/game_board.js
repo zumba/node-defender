@@ -1,5 +1,5 @@
-/* globals Kinetic, Howl, twitter */
-var GameBoard = (function() {
+/* globals twitter, define */
+define(['underscore', 'kenetic', 'howler'], function(_, Kenetic, Howl){
 	var _boardId = 'gameboard';
 	var _boardStage;
 	var _boardLayer;
@@ -71,7 +71,7 @@ var GameBoard = (function() {
 	};
 
 	Position.prototype.renderMark = function() {
-		this.mark = new Kinetic.Circle({
+		this.mark = new Kenetic.Circle({
 			x: this.center.x,
 			y: this.center.y,
 			radius: this.radius,
@@ -125,7 +125,7 @@ var GameBoard = (function() {
 				posX = enemyRadius * Math.cos(angle) - (Math.cos(MATH_45DEG_TO_RAD + angle) * ENEMY_HYPOTENUSE_HALF),
 				posY = enemyRadius * Math.sin(angle) - (Math.sin(MATH_45DEG_TO_RAD + angle) * ENEMY_HYPOTENUSE_HALF);
 
-			enemy.image = new Kinetic.Image({
+			enemy.image = new Kenetic.Image({
 				x: _boardCenter.x + posX,
 				y: _boardCenter.y + posY,
 				image: imageObj,
@@ -198,11 +198,9 @@ var GameBoard = (function() {
 				}, 400);
 			});
 		}
-		
 	};
 
-	function GameBoard() {
-	}
+	var GameBoard = function GameBoard() {};
 
 	GameBoard.prototype.processRound = function(roundInfo, next) {
 		this.previousRound = this.round;
@@ -251,7 +249,7 @@ var GameBoard = (function() {
 
 			var enemyCenter = enemy.getCenterPoint(),
 				attackAngle = Math.atan((enemyCenter.y - _boardCenter.y) / (enemyCenter.x - _boardCenter.x)),
-				attackLine = new Kinetic.Line({
+				attackLine = new Kenetic.Line({
 					x: _boardCenter.x,
 					y: _boardCenter.y,
 					points: [0, 0, 10, 0],
@@ -262,7 +260,7 @@ var GameBoard = (function() {
 
 			var diffX = enemyCenter.x - attackLine.getX(),
 				diffY = enemyCenter.y - attackLine.getY();
-			var anim = new Kinetic.Animation(function(frame) {
+			var anim = new Kenetic.Animation(function(frame) {
 				if (frame.time >= ATTACK_SPEED) {
 					this.stop();
 					attackLine.remove();
@@ -303,7 +301,7 @@ var GameBoard = (function() {
 
 			var enemyCenter = enemy.getCenterPoint(),
 				attackAngle = Math.atan((enemyCenter.y - _boardCenter.y) / (enemyCenter.x - _boardCenter.x)),
-				attackLine = new Kinetic.Line({
+				attackLine = new Kenetic.Line({
 					x: enemyCenter.x,
 					y: enemyCenter.y,
 					points: [0, 0, 10, 0],
@@ -314,7 +312,7 @@ var GameBoard = (function() {
 
 			var diffX = attackLine.getX() - _boardCenter.x,
 				diffY = attackLine.getY() - _boardCenter.y;
-			var anim = new Kinetic.Animation(function(frame) {
+			var anim = new Kenetic.Animation(function(frame) {
 				if (frame.time >= ATTACK_SPEED) {
 					this.stop();
 					attackLine.remove();
@@ -354,7 +352,7 @@ var GameBoard = (function() {
 	};
 
 	GameBoard.renderUser = function() {
-		GameBoard._profileImage = new Kinetic.Image({
+		GameBoard._profileImage = new Kenetic.Image({
 			x: _boardCenter.x - (PROFILE_GRAVATAR_SIZE / 2),
 			y: _boardCenter.y - (PROFILE_GRAVATAR_SIZE / 2),
 			width: PROFILE_GRAVATAR_SIZE,
@@ -392,14 +390,14 @@ var GameBoard = (function() {
 
 	GameBoard.loadSoundEffects = function() {
 		_.each(SOUND_EFFECTS, function(url, id) {
-			_sounds[id] = new Howl({
+			_sounds[id] = new Howl.Howl({
 				urls: [url]
 			});
 		});
 	};
 
 	GameBoard.boardSetup = function() {
-		_boardStage = new Kinetic.Stage({
+		_boardStage = new Kenetic.Stage({
 			container: _boardId,
 			width: BOARD_SIZE.w,
 			height: BOARD_SIZE.h
@@ -408,7 +406,7 @@ var GameBoard = (function() {
 			x: _boardStage.getWidth() / 2,
 			y: _boardStage.getHeight() / 2
 		};
-		_boardLayer = new Kinetic.Layer();
+		_boardLayer = new Kenetic.Layer();
 		_boardStage.add(_boardLayer);
 
 		GameBoard.renderTemplate();
@@ -432,5 +430,4 @@ var GameBoard = (function() {
 	};
 
 	return GameBoard;
-
-}());
+});

@@ -1,5 +1,5 @@
-/* globals _ */
-var Commander = (function() {
+/* globals define */
+define(['underscore'], function(_){
 
 	var _defender;
 	var _defaultAttackMode = 'power';
@@ -12,9 +12,9 @@ var Commander = (function() {
 	];
 	var _consumedTokenCache = [];
 
-	function Commander(defender) {
+	var Commander = function Commander(defender) {
 		_defender = defender;
-	}
+	};
 
 	Commander.availableAttackModes = function() {
 		// Return a "cloned" array as to not allow the user to modify.
@@ -54,4 +54,4 @@ var Commander = (function() {
 
 	return Commander;
 
-}());
+});
