@@ -198,7 +198,6 @@ define(['underscore', 'kenetic', 'howler'], function(_, Kenetic, Howl){
 				}, 400);
 			});
 		}
-
 	};
 
 	var GameBoard = function GameBoard() {};
