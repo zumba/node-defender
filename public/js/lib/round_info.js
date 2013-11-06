@@ -1,8 +1,9 @@
-var RoundInfo = (function() {
+/* globals define */
+define(['underscore'], function(_){
 
-	function RoundInfo(serverData) {
+	var RoundInfo = function RoundInfo(serverData) {
 		this._serverData = serverData;
-	}
+	};
 
 	RoundInfo.prototype.getEnemyActions = function() {
 		return this._serverData.enemyActions;
@@ -55,5 +56,4 @@ var RoundInfo = (function() {
 	};
 
 	return RoundInfo;
-
-}());
+});
