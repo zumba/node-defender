@@ -1,13 +1,14 @@
-var Brain = (function() {
+/* globals define */
+define(['underscore', 'jquery'], function(_, $){
 	var strategy;
 
 	var _STORAGE_KEY = 'strategy';
 
 	var _baseStrategyID = '#base-strategy';
 
-	function Brain(commander) {
+	var Brain = function Brain(commander) {
 		this.commander = commander;
-	}
+	};
 
 	Brain.getBaseStrategy = function() {
 		return $(_baseStrategyID).html();
@@ -51,4 +52,4 @@ var Brain = (function() {
 
 	return Brain;
 
-}());
+});
