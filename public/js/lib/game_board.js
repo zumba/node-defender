@@ -1,5 +1,5 @@
 /* globals twitter, define */
-define(['underscore', 'kenetic', 'howler'], function(_, Kenetic, Howl){
+define(['underscore', 'kinetic', 'howler'], function(_, Kinetic, Howl){
 	var _boardId = 'gameboard';
 	var _boardStage;
 	var _boardLayer;
@@ -71,7 +71,7 @@ define(['underscore', 'kenetic', 'howler'], function(_, Kenetic, Howl){
 	};
 
 	Position.prototype.renderMark = function() {
-		this.mark = new Kenetic.Circle({
+		this.mark = new Kinetic.Circle({
 			x: this.center.x,
 			y: this.center.y,
 			radius: this.radius,
@@ -125,7 +125,7 @@ define(['underscore', 'kenetic', 'howler'], function(_, Kenetic, Howl){
 				posX = enemyRadius * Math.cos(angle) - (Math.cos(MATH_45DEG_TO_RAD + angle) * ENEMY_HYPOTENUSE_HALF),
 				posY = enemyRadius * Math.sin(angle) - (Math.sin(MATH_45DEG_TO_RAD + angle) * ENEMY_HYPOTENUSE_HALF);
 
-			enemy.image = new Kenetic.Image({
+			enemy.image = new Kinetic.Image({
 				x: _boardCenter.x + posX,
 				y: _boardCenter.y + posY,
 				image: imageObj,
@@ -250,7 +250,7 @@ define(['underscore', 'kenetic', 'howler'], function(_, Kenetic, Howl){
 
 			var enemyCenter = enemy.getCenterPoint(),
 				attackAngle = Math.atan((enemyCenter.y - _boardCenter.y) / (enemyCenter.x - _boardCenter.x)),
-				attackLine = new Kenetic.Line({
+				attackLine = new Kinetic.Line({
 					x: _boardCenter.x,
 					y: _boardCenter.y,
 					points: [0, 0, 10, 0],
@@ -261,7 +261,7 @@ define(['underscore', 'kenetic', 'howler'], function(_, Kenetic, Howl){
 
 			var diffX = enemyCenter.x - attackLine.getX(),
 				diffY = enemyCenter.y - attackLine.getY();
-			var anim = new Kenetic.Animation(function(frame) {
+			var anim = new Kinetic.Animation(function(frame) {
 				if (frame.time >= ATTACK_SPEED) {
 					this.stop();
 					attackLine.remove();
@@ -302,7 +302,7 @@ define(['underscore', 'kenetic', 'howler'], function(_, Kenetic, Howl){
 
 			var enemyCenter = enemy.getCenterPoint(),
 				attackAngle = Math.atan((enemyCenter.y - _boardCenter.y) / (enemyCenter.x - _boardCenter.x)),
-				attackLine = new Kenetic.Line({
+				attackLine = new Kinetic.Line({
 					x: enemyCenter.x,
 					y: enemyCenter.y,
 					points: [0, 0, 10, 0],
@@ -313,7 +313,7 @@ define(['underscore', 'kenetic', 'howler'], function(_, Kenetic, Howl){
 
 			var diffX = attackLine.getX() - _boardCenter.x,
 				diffY = attackLine.getY() - _boardCenter.y;
-			var anim = new Kenetic.Animation(function(frame) {
+			var anim = new Kinetic.Animation(function(frame) {
 				if (frame.time >= ATTACK_SPEED) {
 					this.stop();
 					attackLine.remove();
@@ -353,7 +353,7 @@ define(['underscore', 'kenetic', 'howler'], function(_, Kenetic, Howl){
 	};
 
 	GameBoard.renderUser = function() {
-		GameBoard._profileImage = new Kenetic.Image({
+		GameBoard._profileImage = new Kinetic.Image({
 			x: _boardCenter.x - (PROFILE_GRAVATAR_SIZE / 2),
 			y: _boardCenter.y - (PROFILE_GRAVATAR_SIZE / 2),
 			width: PROFILE_GRAVATAR_SIZE,
@@ -398,7 +398,7 @@ define(['underscore', 'kenetic', 'howler'], function(_, Kenetic, Howl){
 	};
 
 	GameBoard.boardSetup = function() {
-		_boardStage = new Kenetic.Stage({
+		_boardStage = new Kinetic.Stage({
 			container: _boardId,
 			width: BOARD_SIZE.w,
 			height: BOARD_SIZE.h
@@ -407,7 +407,7 @@ define(['underscore', 'kenetic', 'howler'], function(_, Kenetic, Howl){
 			x: _boardStage.getWidth() / 2,
 			y: _boardStage.getHeight() / 2
 		};
-		_boardLayer = new Kenetic.Layer();
+		_boardLayer = new Kinetic.Layer();
 		_boardStage.add(_boardLayer);
 
 		GameBoard.renderTemplate();

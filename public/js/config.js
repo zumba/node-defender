@@ -19,13 +19,13 @@ requirejs.config({
 
 		sprintf : 'vendor/sprintf.min',
 		underscore : '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min',
-		kenetic : '//d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.7.2.min'
+		kinetic : '//d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.7.2.min'
 	},
 	shim : {
 		ace : { exports : 'ace' },
 		bootstrap : ['jquery'],
 		howler : { exports : 'Howl' },
-		kenetic : { exports : 'Kenetic' },
+		kinetic : { exports : 'Kinetic' },
 		main : ['bootstrap'],
 		socketio : { exports : 'io' },
 		sprintf : { exports : 'sprintf' },
