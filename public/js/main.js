@@ -4,7 +4,7 @@ require(['jquery', 'index', 'game', 'howto'], function($, index, game, howto){
 		var views = { index : index, game : game, howto : howto };
 
 		if (views[view]){
-				views[view]();
+			views[view]();
 		}
 	});
 });
