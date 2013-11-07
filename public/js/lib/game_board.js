@@ -13,7 +13,6 @@ define(['underscore', 'kinetic', 'howler'], function(_, Kinetic, Howl){
 		ENEMY_ICON_SIZE = 30,
 		PROFILE_GRAVATAR_SIZE = 30,
 		ATTACK_SPEED = 200, // ms
-		MATH_DEG_TO_RAD = Math.PI / 180,
 		MATH_45DEG_TO_RAD = Math.PI / 4,
 		ENEMY_HYPOTENUSE = Math.sqrt(2 * Math.pow(ENEMY_ICON_SIZE, 2)),
 		ENEMY_HYPOTENUSE_HALF = ENEMY_HYPOTENUSE / 2,
@@ -297,8 +296,7 @@ define(['underscore', 'kinetic', 'howler'], function(_, Kinetic, Howl){
 		GameBoard.playSound('enemy-attack');
 		_.each(attacks, function(attack) {
 			var enemyId = attack.id,
-				enemy = _enemies[enemyId],
-				isEnemyDead = !_.find(this.round.getMobs(), function(mob) { return mob.id === enemyId; });
+				enemy = _enemies[enemyId];
 
 			var enemyCenter = enemy.getCenterPoint(),
 				attackAngle = Math.atan((enemyCenter.y - _boardCenter.y) / (enemyCenter.x - _boardCenter.x)),
