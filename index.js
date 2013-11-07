@@ -9,12 +9,11 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var mongoStore = require('connect-mongo')(express);
-
-// Lib
-var TwitterOauth = require('./lib/twitter_oauth.js');
+var passport = require('passport')
+var TwitterStrategy = require('passport-twitter').Strategy;
 
 // Local vars
-var sessionConfig, router;
+var sessionConfig, router, middleware;
 
 // Configuration
 var config = {
@@ -24,8 +23,36 @@ var config = {
 	secureUrl: process.env.SECURECLIENTURL || 'http://localhost:8081',
 	sessionSecret: process.env.SESSION_SECRET || 'supersecret',
 	sessionKey: process.env.SESSION_KEY || 'NODE_DEFENDER_SESSION',
-	gaAccount: process.env.GA_ACCOUNT || false
+	gaAccount: process.env.GA_ACCOUNT || false,
+	twitter: {
+		consumerKey: process.env.TWITTER_CONSUMER_KEY,
+		consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+		callbackURL: process.env.TWITTER_CALLBACK || null
+	}
 };
+
+// Passport configuration
+passport.use(new TwitterStrategy(
+	config.twitter,
+	function (token, tokenSecret, profile, done) {
+		return done(null, {
+			token: token,
+			tokenSecret: tokenSecret,
+			profile: profile
+		});
+	}
+));
+passport.serializeUser(function(user, done) {
+	var pruned = {
+		token: user.token,
+		tokenSecret: user.tokenSecret,
+		twitter: _.pick(user.profile._json, ['screen_name', 'profile_image_url_https', 'lang'])
+	};
+	done(null, pruned);
+});
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
 
 // Setup Express Server
 app.use(express.static(__dirname + '/public'));
@@ -43,6 +70,8 @@ if (process.env.MONGO_DSN) {
 	console.warn('Mongo sessions not activated.');
 }
 app.use(express.session(sessionConfig));
+app.use(passport.initialize());
+app.use(passport.session());
 app.engine('jade', require('jade').__express);
 app.set('views', __dirname + '/templates');
 app.set('view options', {layout: true});
@@ -62,8 +91,7 @@ app.use(function(req, res) {
 router = {
 	root: function(req, res) {
 		if (typeof req.session.username !== 'undefined') {
-			res.redirect('/game');
-			return;
+			return res.redirect('/game');
 		}
 		res.render('index', {
 			host: config.host,
@@ -74,54 +102,9 @@ router = {
 		req.session.username = req.body.username;
 		res.redirect('/game');
 	},
-	oauthConnect: function(req, res) {
-		if (!process.env.TWITTER_CONSUMER_KEY || !process.env.TWITTER_CONSUMER_SECRET) {
-			console.error('Twitter consumer key or secret not defined.');
-			res.redirect('/');
-			return;
-		}
-		TwitterOauth.consumer().getOAuthRequestToken(function(error, oauthToken, oauthTokenSecret){
-			if (error) {
-				res.send("Error getting OAuth request token : " + error, 500);
-				return;
-			} else {
-				req.session.oauthRequestToken = oauthToken;
-				req.session.oauthRequestTokenSecret = oauthTokenSecret;
-				res.redirect("https://api.twitter.com/oauth/authenticate?oauth_token=" + req.session.oauthRequestToken);
-			}
-		});
-	},
 	oauthCallback: function(req, res) {
-		TwitterOauth.consumer().getOAuthAccessToken(
-			req.session.oauthRequestToken,
-			req.session.oauthRequestTokenSecret,
-			req.query.oauth_verifier,
-			function(error, oauthAccessToken, oauthAccessTokenSecret, results) {
-				if (error) {
-					console.error(error, results);
-					res.send('Error getting OAuth access token', 500);
-					return;
-				}
-				req.session.oauthAccessToken = oauthAccessToken;
-				req.session.oauthAccessTokenSecret = oauthAccessTokenSecret;
-
-				TwitterOauth.consumer().get(
-					"https://api.twitter.com/1.1/account/verify_credentials.json",
-					req.session.oauthAccessToken,
-					req.session.oauthAccessTokenSecret,
-					function (error, data) {
-						if (error) {
-							console.error(error);
-							res.send('Error getting twitter information.', 500);
-							return;
-						}
-						req.session.twitter = _.pick(JSON.parse(data), ['screen_name', 'profile_image_url_https', 'lang']);
-						req.session.username = req.session.twitter.screen_name;
-						res.redirect('/game');
-					}
-				);
-			}
-		);
+		req.session.username = req.session.passport.user.twitter.screen_name;
+		res.redirect('/game');
 	},
 	logout: function(req, res) {
 		req.session.destroy();
@@ -141,13 +124,25 @@ router = {
 	}
 };
 
-// Force HTTPs if configured
-app.all('*', function(req, res, next) {
-	if (config.secure && req.headers['x-forwarded-proto'] != 'https') {
-		res.redirect(config.secureUrl + req.url);
-		return;
+// Middleware
+middleware = {
+	requireAuth: function(req, res, next) {
+		if (req.session.username) {
+			return next();
+		}
+		res.redirect('/');
+	},
+	ensureHttps: function(req, res, next) {
+		if (config.secure && req.headers['x-forwarded-proto'] != 'https') {
+			res.redirect(config.secureUrl + req.url);
+			return;
+		}
+		next();
 	}
-	app.locals.twitter = req.session.twitter || false;
+}
+
+app.all('*', middleware.ensureHttps, function(req, res, next) {
+	app.locals.twitter = (req.session.passport.user && req.session.passport.user.twitter) || false;
 	app.locals.username = req.session.username || false;
 	next();
 });
@@ -155,12 +150,12 @@ app.all('*', function(req, res, next) {
 // Routes
 app.get('/', router.root);
 app.post('/anonymous', router.anonymous);
-app.get('/oauth/connect', router.oauthConnect);
-app.get('/oauth/callback', router.oauthCallback);
+app.get('/oauth/connect', passport.authenticate('twitter'));
+app.get('/oauth/callback', passport.authenticate('twitter', { failureRedirect: '/' }), router.oauthCallback);
 app.get('/logout', router.logout);
-app.get('/game', router.game);
+app.get('/game', middleware.requireAuth, router.game);
 
-// Route static static pages
+// Route static pages
 _.each(['how-to-play'], function(template) {
 	app.get('/' + template, function(req, res) {
 		res.render(template, {
