@@ -9,7 +9,7 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var mongoStore = require('connect-mongo')(express);
-var passport = require('passport')
+var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
 
 // Local vars
@@ -133,13 +133,13 @@ middleware = {
 		res.redirect('/');
 	},
 	ensureHttps: function(req, res, next) {
-		if (config.secure && req.headers['x-forwarded-proto'] != 'https') {
+		if (config.secure && req.headers['x-forwarded-proto'] !== 'https') {
 			res.redirect(config.secureUrl + req.url);
 			return;
 		}
 		next();
 	}
-}
+};
 
 app.all('*', middleware.ensureHttps, function(req, res, next) {
 	app.locals.twitter = (req.session.passport.user && req.session.passport.user.twitter) || false;
