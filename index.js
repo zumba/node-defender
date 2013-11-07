@@ -33,7 +33,10 @@ app.use(express.cookieParser());
 app.use(express.bodyParser());
 sessionConfig = {
 	secret: config.sessionSecret,
-	key: config.sessionKey
+	key: config.sessionKey,
+	cookie: {
+		maxAge: new Date(Date.now() + 1000 * 60 * 60 * 4)
+	}
 };
 if (process.env.MONGO_DSN) {
 	sessionConfig.store = new mongoStore({
