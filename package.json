@@ -1,6 +1,6 @@
 {
 	"name": "node-defender",
-	"version": "0.0.3",
+	"version": "0.0.5",
 	"author": "Zumba Fitness <engineering@zumba.com>",
 	"description": "Protect your node client for as long as possible. Defend against waves of murderous server side code that wants nothing more than to kill and disconnect your node client.",
 	"contributors": [
