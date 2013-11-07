@@ -161,16 +161,4 @@ block content
                 li: span.ps2p-small cluster - An enemy that does less damage the lower it's health is.
                 li: span.ps2p-small bruiser - A very high damage melee enemy.
 
-block scripts
-    script(src="/js/vendor/ace/ace.js")
-    script.
-        $(function() {
-            _.each(['commander', 'roundinfo'], function(code) {
-                var editor = ace.edit(code);
-                editor.setReadOnly(true);
-                editor.setTheme('ace/theme/monokai');
-                editor.getSession().setMode('ace/mode/javascript');
-            });
-        });
-
 

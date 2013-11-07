@@ -7,11 +7,6 @@ html(lang=en)
 		link(href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css", rel="stylesheet", type="text/css")
 		link(href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css", rel="stylesheet", type="text/css")
 		link(href="/css/style.css", rel="stylesheet", type="text/css")
-		script.
-			var host = '#{host}';
-			var username = '#{username}';
-			var token = '#{token}';
-			var secret = '#{secret}';
 
 		block vars
 	body(data-view="#{page}")
@@ -35,6 +30,13 @@ html(lang=en)
 						p.pull-right.ps2p-small &copy; 2013 Zumba Fitness, LLC. All rights reserved.
 		a.hidden-xs(href="https://github.com/zumba/node-defender")
 			img(style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png", alt="Fork me on GitHub")
+
+		script.
+			var host = '#{host}';
+			var username = '#{username}';
+			var token = '#{token}';
+			var secret = '#{secret}';
+			var secureClient = #{secure};
 
 		include components/misc_scripts
 		script(data-main="js/config" src="js/vendor/require.js")

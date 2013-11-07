@@ -1,4 +1,4 @@
-/* globals process */
+/* globals process, console, __dirname */
 
 // App Monitoring
 require('newrelic');
@@ -19,13 +19,13 @@ var sessionConfig, router;
 // Configuration
 var config = {
 	host: process.env.HOST || 'http://localhost:8080',
-	port: parseInt(process.env.PORT) || 8081,
+	port: parseInt(process.env.PORT, 10) || 8081,
 	secure: !!process.env.SECURECLIENT,
 	secureUrl: process.env.SECURECLIENTURL || 'http://localhost:8081',
 	sessionSecret: process.env.SESSION_SECRET || 'supersecret',
 	sessionKey: process.env.SESSION_KEY || 'NODE_DEFENDER_SESSION',
 	gaAccount: process.env.GA_ACCOUNT || false
-}
+};
 
 // Setup Express Server
 app.use(express.static(__dirname + '/public'));
@@ -65,10 +65,13 @@ router = {
 			res.redirect('/game');
 			return;
 		}
-		res.render('index');
+		res.render('index', {
+			host: config.host,
+			secure: config.secure
+		});
 	},
 	anonymous: function(req, res) {
-		req.session.username = req.body.username
+		req.session.username = req.body.username;
 		res.redirect('/game');
 	},
 	oauthConnect: function(req, res) {
@@ -77,21 +80,21 @@ router = {
 			res.redirect('/');
 			return;
 		}
-		TwitterOauth.consumer().getOAuthRequestToken(function(error, oauthToken, oauthTokenSecret, results){
+		TwitterOauth.consumer().getOAuthRequestToken(function(error, oauthToken, oauthTokenSecret){
 			if (error) {
 				res.send("Error getting OAuth request token : " + error, 500);
 				return;
 			} else {
 				req.session.oauthRequestToken = oauthToken;
 				req.session.oauthRequestTokenSecret = oauthTokenSecret;
-				res.redirect("https://api.twitter.com/oauth/authenticate?oauth_token=" + req.session.oauthRequestToken);      
+				res.redirect("https://api.twitter.com/oauth/authenticate?oauth_token=" + req.session.oauthRequestToken);
 			}
 		});
 	},
 	oauthCallback: function(req, res) {
 		TwitterOauth.consumer().getOAuthAccessToken(
-			req.session.oauthRequestToken, 
-			req.session.oauthRequestTokenSecret, 
+			req.session.oauthRequestToken,
+			req.session.oauthRequestTokenSecret,
 			req.query.oauth_verifier,
 			function(error, oauthAccessToken, oauthAccessTokenSecret, results) {
 				if (error) {
@@ -103,16 +106,16 @@ router = {
 				req.session.oauthAccessTokenSecret = oauthAccessTokenSecret;
 
 				TwitterOauth.consumer().get(
-					"https://api.twitter.com/1.1/account/verify_credentials.json", 
-					req.session.oauthAccessToken, 
-					req.session.oauthAccessTokenSecret, 
-					function (error, data, response) {
+					"https://api.twitter.com/1.1/account/verify_credentials.json",
+					req.session.oauthAccessToken,
+					req.session.oauthAccessTokenSecret,
+					function (error, data) {
 						if (error) {
 							console.error(error);
 							res.send('Error getting twitter information.', 500);
 							return;
 						}
-						req.session.twitter = _.pick(JSON.parse(data), ['screen_name', 'profile_image_url_https', 'lang'])
+						req.session.twitter = _.pick(JSON.parse(data), ['screen_name', 'profile_image_url_https', 'lang']);
 						req.session.username = req.session.twitter.screen_name;
 						res.redirect('/game');
 					}
@@ -160,7 +163,10 @@ app.get('/game', router.game);
 // Route static static pages
 _.each(['how-to-play'], function(template) {
 	app.get('/' + template, function(req, res) {
-		res.render(template);
+		res.render(template, {
+			host: config.host,
+			secure: config.secure
+		});
 	});
 });
 
