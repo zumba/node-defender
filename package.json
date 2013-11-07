@@ -30,7 +30,8 @@
 		"express": "3.x",
     	"jade": "0.35.x",
 		"underscore": "1.5.x",
-		"oauth": "0.9.x",
+		"passport": "0.1.x",
+		"passport-twitter": "1.0.x",
 		"newrelic": "1.0.x"
 	},
 	"devDependencies": {

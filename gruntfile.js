@@ -15,7 +15,7 @@ module.exports = function(grunt) {
 			options : {
 				jshintrc : "jshint.json"
 			},
-			source : 'public/js/*.js'
+			source : ['public/js/*.js', 'index.js']
 		},
 		compass: {
 			dist: {
