@@ -142,7 +142,7 @@ middleware = {
 };
 
 app.all('*', middleware.ensureHttps, function(req, res, next) {
-	app.locals.twitter = (req.session.passport.user && req.session.passport.user.twitter) || false;
+	app.locals.twitter = req.session.passport.user && req.session.passport.user.twitter;
 	app.locals.username = req.session.username || false;
 	next();
 });
