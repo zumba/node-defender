@@ -21,12 +21,12 @@ define(['underscore', 'kinetic', 'howler'], function(_, Kinetic, Howl){
 		POSITION_PADDING = POSITION_WIDTH / 2,
 		PLAYER_GRAVATAR_DEFAULT = 'http://c.dryicons.com/images/icon_sets/simplistica/png/32x32/user.png',
 		ENEMY_ICONS = {
-			grunt: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
-			swarmer: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
+			grunt: '/img/mushvroom.png',
+			swarmer: '/img/swarmer.png',
 			trooper: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
 			'speed-demon': 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
 			flyer: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
-			cluster: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
+			cluster: '/img/brain.png',
 			bruiser: 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png'
 		},
 		SOUND_EFFECTS = {
