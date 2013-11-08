@@ -32,27 +32,29 @@ var config = {
 };
 
 // Passport configuration
-passport.use(new TwitterStrategy(
-	config.twitter,
-	function (token, tokenSecret, profile, done) {
-		return done(null, {
-			token: token,
-			tokenSecret: tokenSecret,
-			profile: profile
-		});
-	}
-));
-passport.serializeUser(function(user, done) {
-	var pruned = {
-		token: user.token,
-		tokenSecret: user.tokenSecret,
-		twitter: _.pick(user.profile._json, ['screen_name', 'profile_image_url_https', 'lang'])
-	};
-	done(null, pruned);
-});
-passport.deserializeUser(function(obj, done) {
-	done(null, obj);
-});
+if (config.twitter.consumerKey) {
+	passport.use(new TwitterStrategy(
+		config.twitter,
+		function (token, tokenSecret, profile, done) {
+			return done(null, {
+				token: token,
+				tokenSecret: tokenSecret,
+				profile: profile
+			});
+		}
+	));
+	passport.serializeUser(function(user, done) {
+		var pruned = {
+			token: user.token,
+			tokenSecret: user.tokenSecret,
+			twitter: _.pick(user.profile._json, ['screen_name', 'profile_image_url_https', 'lang'])
+		};
+		done(null, pruned);
+	});
+	passport.deserializeUser(function(obj, done) {
+		done(null, obj);
+	});
+}
 
 // Setup Express Server
 app.use(express.static(__dirname + '/public'));
