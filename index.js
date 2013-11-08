@@ -85,12 +85,29 @@ app.locals.gaAccount = config.gaAccount;
 app.use(app.router);
 
 // Middleware
-app.use(function(req, res) {
-	res.status(404);
-	res.render('404', {
-		url: req.url
-	});
-});
+middleware = {
+	requireAuth: function(req, res, next) {
+		if (req.session.username) {
+			return next();
+		}
+		res.redirect('/');
+	},
+	ensureHttps: function(req, res, next) {
+		if (config.secure && req.headers['x-forwarded-proto'] !== 'https') {
+			res.redirect(config.secureUrl + req.url);
+			return;
+		}
+		next();
+	},
+	notFound: function(req, res) {
+		res.status(404);
+		res.render('404', {
+			url: req.url
+		});
+	}
+};
+
+app.use(middleware.notFound);
 
 // Routing methods
 router = {
@@ -126,23 +143,6 @@ router = {
 			token: req.session.oauthAccessToken,
 			secret: req.session.oauthAccessTokenSecret
 		});
-	}
-};
-
-// Middleware
-middleware = {
-	requireAuth: function(req, res, next) {
-		if (req.session.username) {
-			return next();
-		}
-		res.redirect('/');
-	},
-	ensureHttps: function(req, res, next) {
-		if (config.secure && req.headers['x-forwarded-proto'] !== 'https') {
-			res.redirect(config.secureUrl + req.url);
-			return;
-		}
-		next();
 	}
 };
 
