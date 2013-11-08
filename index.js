@@ -51,7 +51,7 @@ passport.serializeUser(function(user, done) {
 	done(null, pruned);
 });
 passport.deserializeUser(function(obj, done) {
-  done(null, obj);
+	done(null, obj);
 });
 
 // Setup Express Server
