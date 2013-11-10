@@ -121,10 +121,17 @@ middleware = {
 		res.render('404', {
 			url: req.url
 		});
+	},
+	error: function(err, req, res, next) {
+		res.status(500);
+		res.render('500', {
+			errors: err
+		});
 	}
 };
 
 app.use(middleware.notFound);
+app.use(middleware.error);
 
 // Routing methods
 router = {
