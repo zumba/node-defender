@@ -11,6 +11,7 @@ var server = require('http').createServer(app);
 var mongoStore = require('connect-mongo')(express);
 var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
+var UsernameStrategy = require('passport-username').Strategy;
 
 // Local vars
 var sessionConfig, router, middleware;
@@ -32,6 +33,33 @@ var config = {
 };
 
 // Passport configuration
+passport.use(new UsernameStrategy(
+	{},
+	function(username, done) {
+		done(null, {
+			username: username
+		});
+	}
+));
+passport.serializeUser(function(user, done) {
+	var pruned = {};
+	if (!user.profile) {
+		pruned = {
+			username: user.username
+		}
+	} else {
+		pruned = {
+			token: user.token,
+			tokenSecret: user.tokenSecret,
+			username: user.profile._json.screen_name,
+			twitter: _.pick(user.profile._json, ['screen_name', 'profile_image_url_https', 'lang'])
+		};
+	}
+	done(null, pruned);
+});
+passport.deserializeUser(function(obj, done) {
+	done(null, obj);
+});
 if (config.twitter.consumerKey) {
 	passport.use(new TwitterStrategy(
 		config.twitter,
@@ -43,17 +71,6 @@ if (config.twitter.consumerKey) {
 			});
 		}
 	));
-	passport.serializeUser(function(user, done) {
-		var pruned = {
-			token: user.token,
-			tokenSecret: user.tokenSecret,
-			twitter: _.pick(user.profile._json, ['screen_name', 'profile_image_url_https', 'lang'])
-		};
-		done(null, pruned);
-	});
-	passport.deserializeUser(function(obj, done) {
-		done(null, obj);
-	});
 }
 
 // Setup Express Server
@@ -87,7 +104,7 @@ app.use(app.router);
 // Middleware
 middleware = {
 	requireAuth: function(req, res, next) {
-		if (req.session.username) {
+		if (req.session.passport.user) {
 			return next();
 		}
 		res.redirect('/');
@@ -112,7 +129,7 @@ app.use(middleware.notFound);
 // Routing methods
 router = {
 	root: function(req, res) {
-		if (typeof req.session.username !== 'undefined') {
+		if (req.session.passport.user) {
 			return res.redirect('/game');
 		}
 		res.render('index', {
@@ -121,11 +138,9 @@ router = {
 		});
 	},
 	anonymous: function(req, res) {
-		req.session.username = req.body.username;
 		res.redirect('/game');
 	},
 	oauthCallback: function(req, res) {
-		req.session.username = req.session.passport.user.twitter.screen_name;
 		res.redirect('/game');
 	},
 	logout: function(req, res) {
@@ -133,28 +148,25 @@ router = {
 		res.redirect('/');
 	},
 	game: function(req, res) {
-		if (typeof req.session.username === 'undefined') {
-			res.redirect('/');
-		}
 		res.render('game', {
 			host: config.host,
-			username: req.session.username,
+			username: req.session.passport.user.username,
 			secure: config.secure,
-			token: req.session.oauthAccessToken,
-			secret: req.session.oauthAccessTokenSecret
+			token: req.session.passport.user.token,
+			secret: req.session.passport.user.tokenSecret
 		});
 	}
 };
 
 app.all('*', middleware.ensureHttps, function(req, res, next) {
-	app.locals.twitter = req.session.passport.user && req.session.passport.user.twitter;
-	app.locals.username = req.session.username || false;
+	app.locals.twitter = req.session.passport.user ? req.session.passport.user.twitter : false;
+	app.locals.username = req.session.passport.user ? req.session.passport.user.username : false;
 	next();
 });
 
 // Routes
 app.get('/', router.root);
-app.post('/anonymous', router.anonymous);
+app.post('/anonymous', passport.authenticate('username'), router.anonymous);
 app.get('/oauth/connect', passport.authenticate('twitter'));
 app.get('/oauth/callback', passport.authenticate('twitter', { failureRedirect: '/' }), router.oauthCallback);
 app.get('/logout', router.logout);
