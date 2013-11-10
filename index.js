@@ -46,7 +46,7 @@ passport.serializeUser(function(user, done) {
 	if (!user.profile) {
 		pruned = {
 			username: user.username
-		}
+		};
 	} else {
 		pruned = {
 			token: user.token,
