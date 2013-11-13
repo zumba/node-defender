@@ -4,6 +4,8 @@
 require('newrelic');
 
 // Modules
+var fs = require('fs');
+var path = require('path');
 var _ = require('underscore');
 var express = require('express');
 var app = express();
@@ -180,11 +182,18 @@ app.get('/logout', router.logout);
 app.get('/game', middleware.requireAuth, router.game);
 
 // Route static pages
-_.each(['how-to-play'], function(template) {
-	app.get('/' + template, function(req, res) {
-		res.render(template, {
-			host: config.host,
-			secure: config.secure
+fs.readdir('templates/static', function(err, files) {
+	if (err) {
+		console.error('Unable to route static files.');
+		return;
+	}
+	_.each(files, function(template) {
+		var name = path.basename(template, '.jade');
+		app.get('/' + name, function(req, res) {
+			res.render('static/' + name, {
+				host: config.host,
+				secure: config.secure
+			});
 		});
 	});
 });
