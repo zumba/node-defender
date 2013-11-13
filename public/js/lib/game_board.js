@@ -24,7 +24,7 @@ define(['underscore', 'kinetic', 'howler'], function(_, Kinetic, Howl){
 			grunt: '/img/face.png',
 			swarmer: '/img/swarmer.png',
 			trooper: '/img/mushvroom.png',
-			'speed-demon': 'http://www.southeastarrow.com/images/icons/blue-left-arrow.png',
+			'speed-demon': '/img/squid.png',
 			flyer: '/img/gunner.png',
 			cluster: '/img/brain.png',
 			bruiser: '/img/egger.png'
