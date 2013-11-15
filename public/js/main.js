@@ -1,10 +1,14 @@
-require(['jquery', 'index', 'game', 'howto'], function($, index, game, howto){
+require(['jquery'], function($){
 	$(function(){
 		var view = $('body').data('view');
-		var views = { index : index, game : game, howto : howto };
-
-		if (views[view]){
-			views[view]();
+		var availableModules = [
+			'index', 'howto', 'game'
+		];
+		if (availableModules.indexOf(view) < 0) {
+			return;
 		}
+		require([view], function (module) {
+			module();
+		});
 	});
 });
