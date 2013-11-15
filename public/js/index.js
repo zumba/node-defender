@@ -1,4 +1,4 @@
-/* globals define */
+/* globals define, ga */
 define(['jquery'], function($){
 	return function(){
 		$('.main').on('submit', '.register-form', function(e) {
