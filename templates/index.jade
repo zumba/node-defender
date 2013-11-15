@@ -32,12 +32,3 @@ block content
 			h4.ps2p Face the Enemy
 			p.ps2p-small Protect your node from waves of various enemies with different attacks and properties.
 	.large-spacer &nbsp;
-
-block scripts
-	if gaAccount
-		script.
-			$(function() {
-				$(document).on('click', '#twitter-connect', function() {
-					ga('send', 'social', 'twitter', 'connect', window.location.href);
-				});
-			});

@@ -14,5 +14,10 @@ define(['jquery'], function($){
 					.tooltip('show');
 			}
 		});
+		if (typeof ga === 'function') {
+			$(document).on('click', '#twitter-connect', function() {
+				ga('send', 'social', 'twitter', 'connect', window.location.href);
+			});
+		}
 	};
 });
