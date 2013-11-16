@@ -1,14 +1,15 @@
 /* globals ga, define */
 
 define(
-	['jquery', 'socketio', 'sprintf', 'blabber', 'gameboard', 'roundInfo', 'commander', 'brain'],
-	function($, io, sprintf, Blabber, GameBoard, RoundInfo, Commander, Brain){
-		var enableStart, disableStart, connect, setupGame, recover;
+	['jquery', 'sprintf', 'blabber', 'gameboard', 'roundInfo', 'commander', 'brain'],
+	function($, sprintf, Blabber, GameBoard, RoundInfo, Commander, Brain){
+		var enableStart, disableStart, connect, setupGame, recover, io;
 		var startBtn, inSession = false, gameEnded = false, _socket, _oauth;
 
 		enableStart = function() {
 			startBtn = startBtn || $('#start');
 			if (!!startBtn.attr('disabled')) {
+				startBtn.text('Start Game');
 				startBtn.removeAttr('disabled');
 			}
 			inSession = false;
@@ -105,10 +106,18 @@ define(
 			enableStart();
 		};
 
+		// Dynamically load socketio
+		require(['socketio'], function(socketio) {
+			io = socketio;
+			enableStart();
+		});
+
 		return {
 			onerror: function(message, url, linenumber) {
 				Blabber.error(url + linenumber + ': ' + message);
-				recover();
+				if (io) {
+					recover();
+				}
 				return false;
 			},
 			start: function(username, code, oauth) {
