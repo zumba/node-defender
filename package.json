@@ -1,6 +1,6 @@
 {
 	"name": "node-defender",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"author": "Zumba Fitness <engineering@zumba.com>",
 	"description": "Protect your node client for as long as possible. Defend against waves of murderous server side code that wants nothing more than to kill and disconnect your node client.",
 	"contributors": [
@@ -15,6 +15,10 @@
 		{
 			"name": "Juan Basso",
 			"email": "juan.basso@zumba.com"
+		},
+		{
+			"name": "Kaue Ribeiro",
+			"email": "kaue.ribeiro@zumba.com"
 		}
 	],
 	"main": "index.js",
@@ -28,7 +32,7 @@
 	"dependencies": {
 		"connect-mongo": "0.3.x",
 		"express": "3.x",
-    	"jade": "0.35.x",
+		"jade": "0.35.x",
 		"underscore": "1.5.x",
 		"passport": "0.1.x",
 		"passport-twitter": "1.0.x",
@@ -36,10 +40,10 @@
 		"newrelic": "1.0.x"
 	},
 	"devDependencies": {
-    	"grunt": "~0.4.1",
-    	"grunt-contrib-jshint": "~0.6.4",
-    	"grunt-contrib-compass": "0.6.x"
-    },
+		"grunt": "~0.4.1",
+		"grunt-contrib-jshint": "~0.6.4",
+		"grunt-contrib-compass": "0.6.x"
+	},
 	"engines": {
 		"node": ">=0.10.4 <0.12"
 	},
