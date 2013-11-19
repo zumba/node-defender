@@ -32,12 +32,18 @@ define(['underscore'], function(_){
 		return Commander.availableAttackModes();
 	};
 
-	Commander.prototype.target = function(enemyId) {
+	/**
+	 * Targt an enemy
+	 *
+	 * @param Object|Number enemy
+	 * @return void
+	 */
+	Commander.prototype.target = function(enemy) {
 		/**
 		 * @todo code server to return an emeny (or enemies) death.
 		 * @todo Listen to emeny deaths in this class and remove the target if it is dead.
 		 */
-		this.enemyTarget = enemyId;
+		this.enemyTarget = enemy.id || enemy;
 	};
 
 	Commander.prototype.sendToServer = function() {
