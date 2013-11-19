@@ -19,7 +19,7 @@ define(['underscore', 'kinetic', 'howler'], function(_, Kinetic, Howl){
 		POSITION_OFFSET = Math.sqrt(2 * Math.pow(PROFILE_GRAVATAR_SIZE, 2)) / 2,
 		POSITION_WIDTH = ENEMY_HYPOTENUSE + 2,
 		POSITION_PADDING = POSITION_WIDTH / 2,
-		PLAYER_GRAVATAR_DEFAULT = 'http://c.dryicons.com/images/icon_sets/simplistica/png/32x32/user.png',
+		PLAYER_GRAVATAR_DEFAULT = '/img/default_avatar.png',
 		ENEMY_ICONS = {
 			grunt: '/img/face.png',
 			swarmer: '/img/swarmer.png',
