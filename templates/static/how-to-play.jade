@@ -12,18 +12,18 @@ block content
         .col-md-12
             h3.ps2p Impementing Your Strategy
             p.
-                You are provided with a few global variables to constructor your overall strategy.
-                Your strategy is run once per round with new enemy waves occurring after six rounds (or if there are no enemies left).
+                You are provided with a few global objects to examine the enemy waves and construct your strategy.
+                Your strategy is executed once per round.  Enemies spawn in waves every six rounds, or when you have destroyed all the enemies on the board.
             .small-spacer
     .row
         .col-md-8
             h4.ps2p commander
             #commander(style="height: 450px;").
                 /**
-                 * Set the attack mode for the next command.
+                 * Set the attack mode for the next round.
                  *
                  * You can programatically get a list of available attacks from commander.availableAttackModes,
-                 * which consists of modes such as: 'power', 'rapid', 'collateral', 'ranged', and 'defensive'.
+                 * which consists of: 'power', 'rapid', 'collateral', 'ranged', and 'defensive'.
                  *
                  * @param string mode
                  * @return void
@@ -49,13 +49,13 @@ block content
             .small-spacer
 
         .col-md-4
-            p The <code>commander</code> object is provided to send commands to the server to instruct it what it should target and what enemy it should attack.
+            p You use the <code>commander</code> object to set your attack mode and select an enemy to attack for the next round.
     .row
         .col-md-8
             h4.ps2p roundInfo
             #roundinfo(style="height: 900px;").
                 /**
-                 * Retrieve information about what the enemy did.
+                 * Retrieve information about what the enemies did.
                  *
                  * The action taken by an enemy may be an attack or a move.
                  *
@@ -64,7 +64,7 @@ block content
                 RoundInfo.prototype.getEnemyActions = function() {};
 
                 /**
-                 * Retreive what the enemy type is by an ID.
+                 * Retreive the enemy type by an enemy ID.
                  *
                  * @param integer id
                  * @return string
@@ -81,7 +81,7 @@ block content
                 RoundInfo.prototype.getMobs = function() {};
 
                 /**
-                 * Retrieve information about my attacks.
+                 * Retrieve information about your attacks.
                  *
                  * This returns a list as some attacks may have multiple outcomes.
                  *
@@ -110,14 +110,19 @@ block content
                  */
                 RoundInfo.prototype.playerHealth = function() {};
         .col-md-4
-            p The <code>roundInfo</code> object is provided to give insight to the player about the current round.
-            p This includes player info, enemies actions, and enemy stats.
+            p The <code>roundInfo</code> object gives you insight about the previous round and the current active enemies.
+            p You can use the info it provides to determine your next move.
+    .row
+        .col-md-12
+            h4.ps2p underscore.js
+            p <a href="http://underscorejs.org" target="_blank">underscore.js</a> is also available to make tasks like looping, sorting, and filtering enemy lists easier.
+            .small-spacer
     .row
         .col-md-12
             h3.ps2p Scoring
             ul
                 li: span 10,000pts for destroying all active enemies and forcing a new wave to spawn.
-                li: span 1000pts per round survived.
+                li: span 1,000pts for every round you survive.
                 li: span 100pts per enemy destroyed.
                 li: span 1pt per damage dealt to enemies.
     .row
@@ -126,54 +131,54 @@ block content
             ul
                 li: <code>power</code> - <b>Power Attack Mode</b>
                     ul
-                        li: span Basic attack that does a good amount of damage to one enemy.
-                        li: span Your client will take slightly more damage from enemies when using this mode.
-                        li: span Range: 2. Not as effective if the enemy is 3 or more positions away from your client.
+                        li: span Basic attack that does 7&ndash;10 damage to one enemy.
+                        li: span Your client will take 15% more damage from enemies when using this mode.
+                        li: span Range: 2. Damage is reduced if the enemy is 3 or more positions away from your client.
                 li: <code>rapid</code> - <b>Rapid Attack Mode</b>
                     ul
-                        li: span Lower damage attack that fires three shots.
+                        li: span Fires three shots that do 1&ndash;2 damage per shot.
                         li: span If the primary target dies after the first or second shot, remaining shots will hit additional targets belonging to the same wave.
-                        li: span Range: 3. Will be slightly less effective if the enemy is in position 4 or 5.
+                        li: span Range: 3. Damage will be slightly reduced if the enemy is in position 4 or 5.
                 li: <code>ranged</code> - <b>Ranged Attack Mode</b>
                     ul
+                        li: span Does 1 damage if an enemy is very close to the player (position 0).
                         li: span Does increasingly more damage the farther away an enemy is.
-                        li: span Does very little damage if an enemy is close to the player (position 0 or 1).
                         li: span Range: 5.
                 li: <code>collateral</code> - <b>Collateral Attack Mode</b>
                     ul
-                        li: span A low power attack that damages all enemies who share the same position as your target.
-                        li: span Your client will take more damage from enemies when using this mode.
-                        li: span Range: 5. Distance does not affect the damage of this attack
+                        li: span An attack that does 1&ndash;2 damage to all enemies who share the same position as your target.
+                        li: span Your client will take 25% more damage from enemies when using this mode.
+                        li: span Range: 5. Distance does not affect the damage of this attack.
                 li: <code>defensive</code> - <b>Defensive Attack Mode</b>
                     ul
-                        li: span A very low power attack.
-                        li: span Significantly reduces all incoming enemy damage.
-                        li: span Range: 0. Does very little damage at all ranges, but might do a tiny bit more damage if the enemy is at point blank range.
+                        li: span Does 1 damage to a single enemy.
+                        li: span Reduces all incoming enemy damage by 50%
+                        li: span Range: 0. Has a chance to do 1&ndash;2 damage if the enemy is at point blank range.
     .row
         .col-md-12
             h3.ps2p Enemy Types
             ul(style="list-style: none;")
                 li
                     img(src="/img/face.png")
-                    span &nbsp; <b>grunt</b> - A basic melee and ranged enemy that does medium damage.
+                    span &nbsp; <strong>grunt</strong> - A basic melee or ranged enemy that does medium damage. Moves away from the player when attacked.
                 li
                     img(src="/img/swarmer.png")
-                    span &nbsp; <b>swarmer</b> - A low damage ranged enemy with low health that usually spawn in packs.
+                    span &nbsp; <strong>swarmer</strong> - A low damage ranged enemy with low health that usually spawns in packs.  Moves away from the player when attacked.
                 li
                     img(src="/img/mushvroom.png")
-                    span &nbsp; <b>trooper</b> - A medium to high damaging melee enemy with some armor.
+                    span &nbsp; <strong>trooper</strong> - A medium to high damaging melee enemy with some armor.
                 li
                     img(src="/img/squid.png")
-                    span &nbsp; <b>speed-demon</b> - A low damage, low health enemy that is evasive.
+                    span &nbsp; <strong>speed-demon</strong> - A low damage, low health, melee or ranged enemy that is evasive.
                 li
                     img(src="/img/gunner.png")
-                    span &nbsp; <b>flyer</b> - A low damage enemy that does more damage as it moves further away.
+                    span &nbsp; <strong>flyer</strong> - A ranged enemy that does increasingly more damage as it moves further away.
                 li
                     img(src="/img/brain.png")
-                    span &nbsp; <b>cluster</b> - An enemy that does less damage the lower it's health is.
+                    span &nbsp; <strong>cluster</strong> - A ranged enemy that does less damage as it loses health.  Moves away from the player when attacked.
                 li
                     img(src="/img/egger.png")
-                    span &nbsp; <b>bruiser</b> - A very high damage melee enemy.
+                    span &nbsp; <strong>bruiser</strong> - A very high damage melee enemy.
     .small-spacer
 
 
