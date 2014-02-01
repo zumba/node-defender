@@ -36,7 +36,7 @@
 		"underscore": "1.5.x",
 		"passport": "0.1.x",
 		"passport-twitter": "1.0.x",
-		"passport-username": "0.0.x",
+		"passport-github": "0.1.x",
 		"newrelic": "1.2.x"
 	},
 	"devDependencies": {

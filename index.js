@@ -13,6 +13,7 @@ var server = require('http').createServer(app);
 var mongoStore = require('connect-mongo')(express);
 var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
+var GithubStrategy = require('passport-github').Strategy;
 
 // Local vars
 var sessionConfig, router, middleware;
@@ -30,23 +31,39 @@ var config = {
 		consumerKey: process.env.TWITTER_CONSUMER_KEY,
 		consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
 		callbackURL: process.env.TWITTER_CALLBACK || null
+	},
+	github: {
+		clientID: process.env.GITHUB_CONSUMER_KEY,
+		clientSecret: process.env.GITHUB_CONSUMER_SECRET,
+		callbackURL: process.env.GITHUB_CALLBACK || null
 	}
 };
 
 // Passport configuration
 passport.serializeUser(function(user, done) {
 	var pruned = {};
-	if (!user.profile) {
-		pruned = {
-			username: user.username
-		};
-	} else {
-		pruned = {
-			token: user.token,
-			tokenSecret: user.tokenSecret,
-			username: user.profile._json.screen_name,
-			twitter: _.pick(user.profile._json, ['screen_name', 'profile_image_url_https', 'lang'])
-		};
+	switch (user.type) {
+		case 'twitter':
+			pruned = {
+				type: 'twitter',
+				token: user.token,
+				tokenSecret: user.tokenSecret,
+				username: user.profile._json.screen_name,
+				profile: _.pick(user.profile._json, ['screen_name', 'profile_image_url_https', 'lang'])
+			};
+			break;
+		case 'github':
+			pruned = {
+				type: 'github',
+				token: user.token,
+				tokenSecret: user.refreshToken,
+				username: user.profile.username,
+				profile: {
+					screen_name: user.profile.username,
+					profile_image_url_https: user.profile._json.avatar_url
+				}
+			}
+			break;
 	}
 	done(null, pruned);
 });
@@ -60,6 +77,20 @@ if (config.twitter.consumerKey) {
 			return done(null, {
 				token: token,
 				tokenSecret: tokenSecret,
+				type: 'twitter',
+				profile: profile
+			});
+		}
+	));
+}
+if (config.github.clientID) {
+	passport.use(new GithubStrategy(
+		config.github,
+		function(accessToken, refreshToken, profile, done) {
+			return done(null, {
+				token: accessToken,
+				refreshToken: refreshToken,
+				type: 'github',
 				profile: profile
 			});
 		}
@@ -159,15 +190,20 @@ router = {
 };
 
 app.all('*', middleware.ensureHttps, function(req, res, next) {
-	app.locals.twitter = req.session.passport.user ? req.session.passport.user.twitter : false;
-	app.locals.username = req.session.passport.user ? req.session.passport.user.username : false;
+	if (req.session.passport.user) {
+		app.locals.type = req.session.passport.user.type;
+		app.locals.profile_image = req.session.passport.user.profile.profile_image_url_https;
+		app.locals.username = req.session.passport.user.username;
+	}
 	next();
 });
 
 // Routes
 app.get('/', router.root);
-app.get('/oauth/connect', passport.authenticate('twitter'));
-app.get('/oauth/callback', passport.authenticate('twitter', { failureRedirect: '/' }), router.oauthCallback);
+app.get('/oauth/twitter/connect', passport.authenticate('twitter'));
+app.get('/oauth/github/connect', passport.authenticate('github'));
+app.get('/oauth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/' }), router.oauthCallback);
+app.get('/oauth/github/callback', passport.authenticate('github', { failureRedirect: '/' }), router.oauthCallback);
 app.get('/logout', router.logout);
 app.get('/game', middleware.requireAuth, router.game);
 
