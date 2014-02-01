@@ -62,7 +62,7 @@ passport.serializeUser(function(user, done) {
 					screen_name: user.profile.username,
 					profile_image_url_https: user.profile._json.avatar_url
 				}
-			}
+			};
 			break;
 	}
 	done(null, pruned);
