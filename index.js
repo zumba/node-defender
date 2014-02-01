@@ -13,7 +13,6 @@ var server = require('http').createServer(app);
 var mongoStore = require('connect-mongo')(express);
 var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
-var UsernameStrategy = require('passport-username').Strategy;
 
 // Local vars
 var sessionConfig, router, middleware;
@@ -35,14 +34,6 @@ var config = {
 };
 
 // Passport configuration
-passport.use(new UsernameStrategy(
-	{},
-	function(username, done) {
-		done(null, {
-			username: username
-		});
-	}
-));
 passport.serializeUser(function(user, done) {
 	var pruned = {};
 	if (!user.profile) {
@@ -175,7 +166,6 @@ app.all('*', middleware.ensureHttps, function(req, res, next) {
 
 // Routes
 app.get('/', router.root);
-app.post('/anonymous', passport.authenticate('username'), router.anonymous);
 app.get('/oauth/connect', passport.authenticate('twitter'));
 app.get('/oauth/callback', passport.authenticate('twitter', { failureRedirect: '/' }), router.oauthCallback);
 app.get('/logout', router.logout);
