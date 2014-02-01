@@ -38,6 +38,7 @@
 		"passport-twitter": "1.0.x",
 		"passport-username": "0.0.x",
 		"newrelic": "1.0.x"
+		"newrelic": "1.2.x"
 	},
 	"devDependencies": {
 		"grunt": "~0.4.1",
