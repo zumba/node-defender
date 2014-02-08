@@ -45,5 +45,7 @@ All the below configurations are optional.
 * `SESSION_KEY` - Cookie name for the session.
 * `TWITTER_CONSUMER_KEY` - OAuth app key. If not defined, twitter oauth will redirect to home page.
 * `TWITTER_CONSUMER_SECRET` - OAuth app secret. If not dfeined, twitter oauth will redirect to home page.
+* `GITHUB_CONSUMER_KEY` - OAuth app key.
+* `GITHUB_CONSUMER_SECRET` - OAuth app secret.
 * `MONGO_DSN` - Mongo connector used for session storage in the form of `mongodb://user:password@host/db/collection`. If not specified will fallback to node sessions storage.
 * `GA_ACCOUNT` - Google Analytics account code.

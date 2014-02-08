@@ -364,7 +364,7 @@ define(['underscore', 'kinetic', 'howler'], function(_, Kinetic, Howl){
 			GameBoard._profileImage.setImage(this);
 			_boardLayer.draw();
 		};
-		GameBoard._originalGravatar.src = (typeof twitter !== 'undefined' && twitter.profile_image_url_https) || PLAYER_GRAVATAR_DEFAULT;
+		GameBoard._originalGravatar.src = window.profile_image || PLAYER_GRAVATAR_DEFAULT;
 
 		GameBoard._defeatedGravatar = new Image();
 		GameBoard._defeatedGravatar.src = '/img/defeated.png';

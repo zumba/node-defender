@@ -24,7 +24,7 @@ define(
 			var socket, query;
 			query = 'username=' + username;
 			if (_oauth) {
-				query += '&token=' + _oauth.token + '&secret=' + _oauth.secret;
+				query += '&token=' + _oauth.token + '&secret=' + _oauth.secret + '&type=' + _oauth.type;
 			}
 			socket = io.connect(window.host + '/defender', {
 				query: query,

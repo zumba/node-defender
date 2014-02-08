@@ -50,7 +50,8 @@ define(
 						editor.getSession().getValue(),
 						{
 							token: window.token,
-							secret: window.secret
+							secret: window.secret,
+							type: window.type
 						}
 					);
 				})
